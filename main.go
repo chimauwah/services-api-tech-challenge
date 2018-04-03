@@ -1,76 +1,102 @@
+// Services & Api Tech Challange #1
+//
+// This Rest API written in GoLang provides CRUD operations
+// for a directory of company employees
+//
+//     Schemes: http
+//     Host: localhost:8080
+//     BasePath: /
+//     Version: 0.0.1
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+// swagger:meta
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
-)
-
-var (
-	//Go provides a flag package supporting basic command-line flag parsing.
-	addr = flag.String("addr", ":8080", "http service port")
-	data map[string]string
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	// parse command line
-	flag.Parse()
-	data = map[string]string{}
-	router := httprouter.New()
+	// init mux router
+	router := mux.NewRouter()
 
-	router.GET("/", home)
-	router.GET("/employees", retrieveAllEmployees)
-	router.GET("/employee/:id", retrieveEmployeeDetails)
-	router.POST("/add", addEmployee)
-	router.PUT("/update/:key/:value", updateEmployee)
-	router.DELETE("/remove/:key", removeEmployee)
+	// route handlers / endpoints
+	router.HandleFunc("/api/employees", getEmployees).Methods("GET")
+	router.HandleFunc("/api/employee/details/{id}", getEmployeeDetails).Methods("GET")
+	router.HandleFunc("/api/employee", createEmployee).Methods("POST")
+	router.HandleFunc("/api/employee/{id}", updateEmployee).Methods("PUT")
+	router.HandleFunc("/api/employee/{id}", deleteEmployee).Methods("DELETE")
 
-	fmt.Print("Listening on port 8080...\n")
-	err := http.ListenAndServe(*addr, router)
-	if err != nil {
-		log.Fatal("ListenAndServe:", err)
-	}
-}
-
-func home(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	w.Write([]byte("Welcome to Chima Uwah's Services & APIs Tech Challenge #1 completed in GoLang"))
-}
-
-func retrieveEmployeeDetails(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	w.Write([]byte("Not yet implemented"))
-}
-
-func retrieveAllEmployees(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	// k := p.ByName("key")
-	// if k == "" {
-	// 	// if no key in url, list all entries in data map
-	// 	fmt.Fprintf(w, "Read list: %v", data)
-	// 	return
-	// }
-	// // if key given, returns corresponding value
-	// fmt.Fprintf(w, "ready entry: data[%s] = %s", k, data[k])
-	w.Write([]byte("Not yet implemented"))
+	fmt.Println("Listening on port :8080...")
+	log.Fatal(http.ListenAndServe(":8080", router))
 
 }
 
-func addEmployee(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	w.Write([]byte("Not yet implemented"))
+// GetEmployees swagger:route GET /api/employees employees listEmployees
+//
+// Resource returning all employees.
+//
+// Responses:
+//	200: employeeResponse
+//	500: internal
+func getEmployees(w http.ResponseWriter, r *http.Request) {
+
 }
 
-func removeEmployee(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	w.Write([]byte("Not yet implemented"))
+// GetEmployeeDetails swagger:route GET /api/employee/details/{id} employeedetails listEmployeeDetails
+//
+// Resource returning details for a specific employee.
+//
+// Responses:
+//	200: employeeResponse
+//	500: internal
+func getEmployeeDetails(w http.ResponseWriter, r *http.Request) {
+
 }
 
-func updateEmployee(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	// k := p.ByName("key")
-	// v := p.ByName("value")
+// CreateEmployee swagger:route POST /api/employee employee createEmployee
+//
+// Resource to create a single employee.
+//
+// Responses:
+//	200: employeeResponse
+//  400: badReq
+//  422: validationError
+//	500: internal
+func createEmployee(w http.ResponseWriter, r *http.Request) {
 
-	w.Write([]byte("Not yet implemented"))
+}
 
-	// data[k] = v
+// UpdateEmployee swagger:route PUT /api/employee/{id} employee updateEmployee
+//
+// Resource to update an existing employee.
+//
+// Responses:
+//	200: employeeResponse
+//  400: badReq
+//  422: validationError
+//	500: internal
+func updateEmployee(w http.ResponseWriter, r *http.Request) {
 
-	// fmt.Fprintf(w, "Updated: data[%s] = %s", k, data[k])
+}
+
+// DeleteEmployee swagger:route DELETE /api/employee/{id} employee deleteEmployee
+//
+// Resource to delete an existing employee.
+//
+// Responses:
+//	200: employeeResponse
+//  400: badReq
+//	500: internal
+func deleteEmployee(w http.ResponseWriter, r *http.Request) {
+
 }

@@ -1,0 +1,451 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "This Rest API written in GoLang provides CRUD operations\nfor a directory of company employees",
+    "title": "Services \u0026 Api Tech Challange #1",
+    "version": "0.0.1"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {
+    "/api/employee": {
+      "post": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Resource to create a single employee.",
+        "operationId": "createEmployee",
+        "parameters": [
+          {
+            "x-go-name": "Employee",
+            "description": "The Employee to create",
+            "name": "employee",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Employee"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "422": {
+            "$ref": "#/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/responses/internal"
+          }
+        }
+      }
+    },
+    "/api/employee/details/{id}": {
+      "get": {
+        "tags": [
+          "employeedetails"
+        ],
+        "summary": "Resource returning details for a specific employee.",
+        "operationId": "listEmployeeDetails",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "500": {
+            "$ref": "#/responses/internal"
+          }
+        }
+      }
+    },
+    "/api/employee/{id}": {
+      "put": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Resource to update an existing employee.",
+        "operationId": "updateEmployee",
+        "parameters": [
+          {
+            "x-go-name": "Employee",
+            "description": "The Employee date with which to overwrite existing Employee",
+            "name": "employee",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Employee"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "422": {
+            "$ref": "#/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/responses/internal"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Resource to delete an existing employee.",
+        "operationId": "deleteEmployee",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "500": {
+            "$ref": "#/responses/internal"
+          }
+        }
+      }
+    },
+    "/api/employees": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Resource returning all employees.",
+        "operationId": "listEmployees",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "500": {
+            "$ref": "#/responses/internal"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Employee": {
+      "description": "This is used for operations that involve an Employee",
+      "type": "object",
+      "title": "An Employee model",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "x-go-name": "Active"
+        },
+        "address1": {
+          "type": "string",
+          "x-go-name": "Address1"
+        },
+        "address2": {
+          "type": "string",
+          "x-go-name": "Address2"
+        },
+        "cellphone": {
+          "type": "string",
+          "x-go-name": "CellPhone"
+        },
+        "city": {
+          "type": "string",
+          "x-go-name": "City"
+        },
+        "clientloc": {
+          "type": "string",
+          "x-go-name": "ClientLoc"
+        },
+        "enterts": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "EnterTs"
+        },
+        "firstname": {
+          "type": "string",
+          "x-go-name": "FirstName"
+        },
+        "homephone": {
+          "type": "string",
+          "x-go-name": "HomePhone"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "imagehash": {
+          "type": "string",
+          "x-go-name": "ImageHash"
+        },
+        "ipphone": {
+          "type": "string",
+          "x-go-name": "IPPhone"
+        },
+        "lastchangets": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "LastChangeTs"
+        },
+        "lasthash": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "LastHash"
+        },
+        "lastname": {
+          "type": "string",
+          "x-go-name": "LastName"
+        },
+        "mail": {
+          "type": "string",
+          "x-go-name": "Mail"
+        },
+        "managerdn": {
+          "type": "string",
+          "x-go-name": "ManagerDn"
+        },
+        "managersamaccountname": {
+          "type": "string",
+          "x-go-name": "ManagerSamaccountname"
+        },
+        "nickname": {
+          "type": "string",
+          "x-go-name": "NickName"
+        },
+        "office": {
+          "type": "string",
+          "x-go-name": "Office"
+        },
+        "picture": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "Picture"
+        },
+        "primarypa": {
+          "type": "string",
+          "x-go-name": "PrimaryPa"
+        },
+        "role": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Role"
+        },
+        "samaccountname": {
+          "type": "string",
+          "x-go-name": "Samaccountname"
+        },
+        "secondarypa": {
+          "type": "string",
+          "x-go-name": "SecondaryPa"
+        },
+        "state": {
+          "type": "string",
+          "x-go-name": "State"
+        },
+        "title": {
+          "type": "string",
+          "x-go-name": "Title"
+        },
+        "travelpref": {
+          "type": "string",
+          "x-go-name": "TravelPref"
+        },
+        "zip": {
+          "type": "string",
+          "x-go-name": "Zip"
+        }
+      },
+      "x-go-package": "services-api-tech-challenge"
+    }
+  },
+  "responses": {
+    "badReq": {
+      "description": "Error Bad Request",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 400 - Status Bad Request",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "bool": {
+      "description": "Boolean response",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP Status Code 200",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "data": {
+            "description": "Boolean true/false",
+            "type": "boolean",
+            "x-go-name": "Data"
+          }
+        }
+      }
+    },
+    "conflict": {
+      "description": "Error Conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 409 - Conflict",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "employeeResponse": {
+      "description": "An EmployeeResponse response model\n\nThis is used for returning a response with status code and list of retrieved employees as body",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 200 - Status OK",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "employees": {
+            "description": "Employee model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Employee"
+            },
+            "x-go-name": "Payload"
+          }
+        }
+      }
+    },
+    "forbidden": {
+      "description": "Error Forbidden",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 403 - Forbidden",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "internal": {
+      "description": "Error Interval Server",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 500 - Internal server error",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "notFound": {
+      "description": "Error Not Found",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 404 - Not Found",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "ok": {
+      "description": "Success response",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP Status Code 200",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          }
+        }
+      }
+    },
+    "validationError": {
+      "description": "A ValidationError is a swagger response to represent error",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "x-go-name": "Code"
+          },
+          "field": {
+            "type": "string",
+            "x-go-name": "Field"
+          },
+          "message": {
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    }
+  }
+}
