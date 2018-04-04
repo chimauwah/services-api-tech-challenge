@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 // An EmployeeCreateEmployeeReq request model
 //
@@ -48,87 +51,87 @@ type EmployeeResponse struct {
 // This is used for operations that involve an Employee
 // swagger:parameters
 type Employee struct {
-	ID                    int       `json:"id"`
-	EnterTs               time.Time `json:"enterts"`
-	LastChangeTs          time.Time `json:"lastchangets"`
-	Active                bool      `json:"active"`
-	FirstName             string    `json:"firstname"`
-	LastName              string    `json:"lastname"`
-	Address1              string    `json:"address1"`
-	Address2              string    `json:"address2"`
-	City                  string    `json:"city"`
-	State                 string    `json:"state"`
-	Zip                   string    `json:"zip"`
-	CellPhone             string    `json:"cellphone"`
-	HomePhone             string    `json:"homephone"`
-	Picture               []byte    `json:"picture"`
-	Title                 string    `json:"title"`
-	Role                  int       `json:"role"`
-	IPPhone               string    `json:"ipphone"`
-	Samaccountname        string    `json:"samaccountname"`
-	Mail                  string    `json:"mail"`
-	PrimaryPa             string    `json:"primarypa"`
-	SecondaryPa           string    `json:"secondarypa"`
-	Office                string    `json:"office"`
-	ManagerDn             string    `json:"managerdn"`
-	TravelPref            string    `json:"travelpref"`
-	ManagerSamaccountname string    `json:"managersamaccountname"`
-	LastHash              int       `json:"lasthash"`
-	ImageHash             string    `json:"imagehash"`
-	NickName              string    `json:"nickname"`
-	ClientLoc             string    `json:"clientloc"`
+	ID                    int            `json:"id"`
+	EnterTs               time.Time      `json:"enterts"`
+	LastChangeTs          time.Time      `json:"lastchangets"`
+	Active                bool           `json:"active"`
+	FirstName             sql.NullString `json:"firstname"`
+	LastName              sql.NullString `json:"lastname"`
+	Address1              sql.NullString `json:"address1"`
+	Address2              sql.NullString `json:"address2"`
+	City                  sql.NullString `json:"city"`
+	State                 sql.NullString `json:"state"`
+	Zip                   sql.NullString `json:"zip"`
+	CellPhone             sql.NullString `json:"cellphone"`
+	HomePhone             sql.NullString `json:"homephone"`
+	Picture               []byte         `json:"picture"`
+	Title                 sql.NullString `json:"title"`
+	Role                  sql.NullInt64  `json:"role"`
+	IPPhone               sql.NullString `json:"ipphone"`
+	Samaccountname        sql.NullString `json:"samaccountname"`
+	Mail                  sql.NullString `json:"mail"`
+	PrimaryPa             sql.NullString `json:"primarypa"`
+	SecondaryPa           sql.NullString `json:"secondarypa"`
+	Office                sql.NullString `json:"office"`
+	ManagerDn             sql.NullString `json:"managerdn"`
+	TravelPref            sql.NullString `json:"travelpref"`
+	ManagerSamaccountname sql.NullString `json:"managersamaccountname"`
+	LastHash              sql.NullInt64  `json:"lasthash"`
+	ImageHash             sql.NullString `json:"imagehash"`
+	NickName              sql.NullString `json:"nickname"`
+	ClientLoc             sql.NullString `json:"clientloc"`
 }
 
 // Device struct
 type Device struct {
-	ID             int       `json:"id"`
-	EnterTs        time.Time `json:"enterts"`
-	LastChangeTs   time.Time `json:"lastchangets"`
-	Active         bool      `json:"active"`
-	DeviceType     string    `json:"devicetype"`
-	NotificationID string    `json:"notifcationid"`
-	DeviceID       string    `json:"deviceId"`
-	EmployeeID     int       `json:"employeeid"`
+	ID             int            `json:"id"`
+	EnterTs        time.Time      `json:"enterts"`
+	LastChangeTs   time.Time      `json:"lastchangets"`
+	Active         bool           `json:"active"`
+	DeviceType     sql.NullString `json:"devicetype"`
+	NotificationID sql.NullString `json:"notifcationid"`
+	DeviceID       sql.NullString `json:"deviceId"`
+	EmployeeID     int            `json:"employeeid"`
 }
 
 // CoreSkill struct
 type CoreSkill struct {
-	ID           int       `json:"id"`
-	EnterTs      time.Time `json:"enterts"`
-	LastChangeTs time.Time `json:"lastchangets"`
-	Active       bool      `json:"active"`
-	Skill        string    `json:"skill"`
-	Sequence     int       `json:"sequence"`
-	EmployeeID   int       `json:"employeeid"`
-	Proficiency  string    `json:"proficiency"`
+	ID           int            `json:"id"`
+	EnterTs      time.Time      `json:"enterts"`
+	LastChangeTs time.Time      `json:"lastchangets"`
+	Active       bool           `json:"active"`
+	Skill        sql.NullString `json:"skill"`
+	Sequence     sql.NullInt64  `json:"sequence"`
+	EmployeeID   int            `json:"employeeid"`
+	Proficiency  sql.NullString `json:"proficiency"`
 }
 
 // Checkin struct
 type Checkin struct {
-	ID             int       `json:"id"`
-	EnterTs        time.Time `json:"enterts"`
-	LastChangeTs   time.Time `json:"lastchangets"`
-	Active         bool      `json:"active"`
-	GeoID          string    `json:"geoid"`
-	LAT            float32   `json:"lat"`
-	LNG            float32   `json:"lng"`
-	Name           string    `json:"name"`
-	Distance       float32   `json:"distance"`
-	NotifRequested int       `json:"notifrequested"`
-	NotiExpiration int       `json:"notifrequsted"`
-	EmployeeID     int       `json:"employeeid"`
+	ID             int            `json:"id"`
+	EnterTs        time.Time      `json:"enterts"`
+	LastChangeTs   time.Time      `json:"lastchangets"`
+	Active         bool           `json:"active"`
+	GeoID          sql.NullString `json:"geoid"`
+	LAT            float32        `json:"lat"`
+	LNG            float32        `json:"lng"`
+	Name           sql.NullString `json:"name"`
+	Distance       float32        `json:"distance"`
+	NotifRequested sql.NullInt64  `json:"notifrequested"`
+	NotiExpiration sql.NullInt64  `json:"notifrequsted"`
+	EmployeeID     int            `json:"employeeid"`
 }
 
 // PracticeArea struct
 type PracticeArea struct {
-	ID           int       `json:"id"`
-	EnterTs      time.Time `json:"enterts"`
-	LastChangeTs time.Time `json:"lastchangets"`
-	Active       bool      `json:"active"`
-	Code         string    `json:"code"`
-	Description  string    `json:"description"`
-	PrimaryOnly  bool      `json:"primaryonly"`
-	Sequence     int       `json:"sequence"`
+	ID           int            `json:"id"`
+	EnterTs      time.Time      `json:"enterts"`
+	LastChangeTs time.Time      `json:"lastchangets"`
+	Active       bool           `json:"active"`
+	Code         sql.NullString `json:"code"`
+	Description  sql.NullString `json:"description"`
+	PrimaryOnly  bool           `json:"primaryonly"`
+	Sequence     sql.NullInt64  `json:"sequence"`
 }
 
 // Success response

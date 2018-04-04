@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"services-api-tech-challenge/db"
 	"services-api-tech-challenge/handler"
 
 	"github.com/gorilla/mux"
@@ -29,7 +30,7 @@ import (
 
 func main() {
 	// start by initializing db
-	//db.Init()
+	db.Init()
 
 	//init mux router
 	router := mux.NewRouter()

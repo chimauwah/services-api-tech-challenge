@@ -4,9 +4,20 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"services-api-tech-challenge/model"
 
 	"github.com/gchaincl/dotsql"
 )
+
+var db *sql.DB
+
+func setDB(db2 *sql.DB) {
+	db = db2
+}
+
+func getDB() *sql.DB {
+	return db
+}
 
 const (
 	// name of the db driver.
@@ -22,6 +33,10 @@ func Init() {
 		log.Fatalf("Error opening DB (%s)\n", err)
 		panic(err)
 	}
+
+	//set db instance
+	setDB(db)
+
 	// load schema from file
 	dot, err := loadSQLFile("schema.sql")
 
@@ -94,4 +109,34 @@ func testSelect(db *sql.DB) {
 		cnt++
 	}
 	fmt.Printf("Total rows returned: (%d)\n", cnt)
+}
+
+// FindAllEmployees return all employees
+func FindAllEmployees() (e []model.Employee) {
+	q := "SELECT * FROM Employee"
+	rows, err := getDB().Query(q)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	var res []model.Employee
+	for rows.Next() {
+		var emp model.Employee
+		err := rows.Scan(&emp.ID, &emp.EnterTs, &emp.LastChangeTs, &emp.Active,
+			&emp.FirstName, &emp.LastName, &emp.Address1, &emp.Address2, &emp.City,
+			&emp.State, &emp.Zip, &emp.CellPhone, &emp.HomePhone, &emp.Picture,
+			&emp.Title, &emp.Role, &emp.IPPhone, &emp.Samaccountname, &emp.Mail,
+			&emp.PrimaryPa, &emp.SecondaryPa, &emp.Office, &emp.ManagerDn,
+			&emp.TravelPref, &emp.ManagerSamaccountname, &emp.LastHash,
+			&emp.ImageHash, &emp.NickName, &emp.ClientLoc)
+		if err != nil {
+			log.Fatal(err)
+		}
+		res = append(res, emp)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return res
 }

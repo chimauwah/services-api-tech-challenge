@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"services-api-tech-challenge/model"
+	"services-api-tech-challenge/db"
 )
 
 // GetEmployees swagger:route GET /api/employees employees listEmployees
@@ -16,8 +16,8 @@ import (
 //	500: internal
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
 	log.Print("GetEmployees called...\n")
-	emp := new(model.Employee)
-	json.NewEncoder(w).Encode(emp)
+	emps := db.FindAllEmployees()
+	json.NewEncoder(w).Encode(emps)
 }
 
 // GetEmployeeDetails swagger:route GET /api/employee/details/{id} employeedetails listEmployeeDetails
