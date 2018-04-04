@@ -272,7 +272,7 @@
           "x-go-name": "Zip"
         }
       },
-      "x-go-package": "services-api-tech-challenge"
+      "x-go-package": "services-api-tech-challenge/model"
     }
   },
   "responses": {
