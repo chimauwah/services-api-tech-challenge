@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"services-api-tech-challenge/db"
+	"services-api-tech-challenge/model"
 )
 
 // GetEmployees swagger:route GET /api/employees employees listEmployees
@@ -41,7 +42,19 @@ func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func CreateEmployee(w http.ResponseWriter, r *http.Request) {
-	log.Print("CreateEmployee called...")
+	log.Println("CreateEmployee called...\n")
+	decoder := json.NewDecoder(r.Body)
+	var e model.Employee
+	err := decoder.Decode(&e)
+	if err != nil {
+		log.Fatal(err)
+		response := map[string]string{"Status": "400", "Message": "Malformed Employee object"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	emp := db.AddEmployee(e)
+	json.NewEncoder(w).Encode(emp)
 }
 
 // UpdateEmployee swagger:route PUT /api/employee/{id} employee updateEmployee

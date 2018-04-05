@@ -65,22 +65,22 @@ func Init() {
 // loadSQLFile imports SQL queries from given file.
 func loadSQLFile(schemaFile string) (*dotsql.DotSql, error) {
 	dot, err := dotsql.LoadFromFile(schemaFile)
-	if err == nil {
-		fmt.Printf("Successfully loaded sql queries from file: (%s)\n", schemaFile)
-		return dot, nil
+	if err != nil {
+		fmt.Println("Error occurred loading (%s): (%s)\n", schemaFile, err)
+		return nil, err
 	}
-	fmt.Println("Error occurred loading (%s): (%s)\n", schemaFile, err)
-	return nil, err
+	fmt.Printf("Successfully loaded sql queries from file: (%s)\n", schemaFile)
+	return dot, nil
 
 }
 
 // executeScript executes the given script on given database.
 func executeScript(db *sql.DB, dot *dotsql.DotSql, scriptName string) {
-	res, err := dot.Exec(db, scriptName)
-	if err == nil && res != nil {
-		// fmt.Printf("Executed (%s) script successfully\n", scriptName)
-	} else {
+	_, err := dot.Exec(db, scriptName)
+	if err != nil {
 		fmt.Printf("error occurred executing (%s): (%s)\n", scriptName, err)
+	} else {
+		// fmt.Printf("Executed (%s) script successfully\n", scriptName)
 	}
 }
 
@@ -111,7 +111,27 @@ func testSelect(db *sql.DB) {
 	fmt.Printf("Total rows returned: (%d)\n", cnt)
 }
 
-// FindAllEmployees return all employees
+// AddEmployee adds an Employee to the datastore and returns the Employee with the generated id
+func AddEmployee(emp model.Employee) (e model.Employee) {
+	q := "INSERT INTO Employee (id, enter_ts, last_change_ts, active, first_name, last_name, " +
+		"address1,address2,city,state,zip,cell_phone,home_phone,picture,title,role,ip_phone," +
+		"samaccountname,mail,primary_pa,secondary_pa,office,manager_dn,travel_pref," +
+		"manager_samaccountname,last_hash,image_hash,nick_name,client_loc) VALUES " +
+		"(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
+	emp.ID = getEmployeeNextSequence()
+	_, err := getDB().Exec(q, emp.ID, emp.EnterTs, emp.LastChangeTs, emp.Active, emp.FirstName,
+		emp.LastName, emp.Address1, emp.Address2, emp.City, emp.State, emp.Zip, emp.CellPhone,
+		emp.HomePhone, emp.Picture, emp.Title, emp.Role, emp.IPPhone, emp.Samaccountname,
+		emp.Mail, emp.PrimaryPa, emp.SecondaryPa, emp.Office, emp.ManagerDn, emp.TravelPref,
+		emp.ManagerSamaccountname, emp.LastHash, emp.ImageHash, emp.NickName, emp.ClientLoc)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return emp
+}
+
+// FindAllEmployees returns all employees
 func FindAllEmployees() (e []model.Employee) {
 	q := "SELECT * FROM Employee"
 	rows, err := getDB().Query(q)
@@ -139,4 +159,14 @@ func FindAllEmployees() (e []model.Employee) {
 		log.Fatal(err)
 	}
 	return res
+}
+
+func getEmployeeNextSequence() (seq int) {
+	q := "SELECT MAX(ID) FROM Employee"
+	row := getDB().QueryRow(q)
+	err := row.Scan(&seq)
+	if err != nil {
+		panic(err)
+	}
+	return seq + 1
 }
