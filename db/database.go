@@ -161,6 +161,19 @@ func FindAllEmployees() (e []model.Employee) {
 	return res
 }
 
+// DeleteEmployee deletes the employee with given id
+func DeleteEmployee(id int) (int64, error) {
+	q := "DELETE FROM Employee WHERE ID = ?"
+	res, err := getDB().Exec(q, id)
+	if err != nil {
+		log.Fatal(err)
+		return 0, err
+	}
+
+	v, _ := res.RowsAffected()
+	return v, nil
+}
+
 func getEmployeeNextSequence() (seq int) {
 	q := "SELECT MAX(ID) FROM Employee"
 	row := getDB().QueryRow(q)

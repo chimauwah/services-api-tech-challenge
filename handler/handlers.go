@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"services-api-tech-challenge/db"
 	"services-api-tech-challenge/model"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // GetEmployees swagger:route GET /api/employees employees listEmployees
@@ -48,7 +51,7 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&e)
 	if err != nil {
 		log.Fatal(err)
-		response := map[string]string{"Status": "400", "Message": "Malformed Employee object"}
+		response := createResponseMap(true, "400", err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -80,4 +83,28 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 //	500: internal
 func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 	log.Print("DeleteEmployee called...")
+	var response map[string]string
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	cnt, err := db.DeleteEmployee(id)
+	if err != nil {
+		response = createResponseMap(false, "500", err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if cnt < 1 {
+		response = createResponseMap(false, "200", "Could not delete record")
+	} else {
+		response = createResponseMap(true, "200", "Record deleted successfully.")
+	}
+	json.NewEncoder(w).Encode(response)
+
+}
+
+func createResponseMap(success bool, code string, msg string) map[string]string {
+	res := map[string]string{
+		"Success": strconv.FormatBool(success),
+		"Status":  code,
+		"Message": msg}
+	return res
 }
