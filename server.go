@@ -38,6 +38,7 @@ func main() {
 	// route handlers / endpoints
 	// router.Methods("GET").Path("/api/employeez").HandlerFunc(handler.GetEmployees)
 	router.HandleFunc("/api/employees", handler.GetEmployees).Methods("GET")
+	router.HandleFunc("/api/employee/{id}", handler.GetEmployee).Methods("GET")
 	router.HandleFunc("/api/employee/details/{id}", handler.GetEmployeeDetails).Methods("GET")
 	router.HandleFunc("/api/employee", handler.CreateEmployee).Methods("POST")
 	router.HandleFunc("/api/employee/{id}", handler.UpdateEmployee).Methods("PUT")

@@ -11,6 +11,27 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetEmployee swagger:route GET /api/employee{id} employee employee
+//
+// Resource returning employee with given id.
+//
+// Responses:
+//	200: employeeResponse
+//	500: internal
+func GetEmployee(w http.ResponseWriter, r *http.Request) {
+	log.Println("GetEmployee called...")
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	emp, err := db.FindEmployee(id)
+	if err != nil {
+		log.Println(err)
+		response := createResponseMap(false, "500", err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	json.NewEncoder(w).Encode(emp)
+}
+
 // GetEmployees swagger:route GET /api/employees employees listEmployees
 //
 // Resource returning all employees.
@@ -19,8 +40,14 @@ import (
 //	200: employeeResponse
 //	500: internal
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
-	log.Print("GetEmployees called...\n")
-	emps := db.FindAllEmployees()
+	log.Println("GetEmployees called...")
+	emps, err := db.FindAllEmployees()
+	if err != nil {
+		log.Println(err)
+		response := createResponseMap(false, "500", err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	json.NewEncoder(w).Encode(emps)
 }
 
@@ -32,7 +59,7 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 //	200: employeeResponse
 //	500: internal
 func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
-	log.Print("GetEmployeeDetails called...")
+	log.Println("GetEmployeeDetails called...")
 }
 
 // CreateEmployee swagger:route POST /api/employee employee createEmployee
@@ -45,18 +72,23 @@ func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func CreateEmployee(w http.ResponseWriter, r *http.Request) {
-	log.Println("CreateEmployee called...\n")
+	log.Println("CreateEmployee called...")
 	decoder := json.NewDecoder(r.Body)
 	var e model.Employee
 	err := decoder.Decode(&e)
 	if err != nil {
-		log.Fatal(err)
-		response := createResponseMap(true, "400", err.Error())
+		log.Println(err)
+		response := createResponseMap(false, "400", err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	emp := db.AddEmployee(e)
+	emp, err := db.AddEmployee(e)
+	if err != nil {
+		response := createResponseMap(false, "500", err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	json.NewEncoder(w).Encode(emp)
 }
 
@@ -71,6 +103,33 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 //	500: internal
 func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	log.Print("UpdateEmployee called...\n")
+	decoder := json.NewDecoder(r.Body)
+	var e model.Employee
+	err := decoder.Decode(&e)
+	if err != nil {
+		log.Println(err)
+		response := createResponseMap(false, "400", "Could not decode request body: "+err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	var response map[string]string
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	cnt, err := db.UpdateEmployee(id, e)
+	if err != nil {
+		response = createResponseMap(false, "500", err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if cnt < 1 {
+		response = createResponseMap(false, "200", "Could not update record")
+	} else {
+		response = createResponseMap(true, "200", "Record updated successfully.")
+	}
+	json.NewEncoder(w).Encode(response)
+
 }
 
 // DeleteEmployee swagger:route DELETE /api/employee/{id} employee deleteEmployee
@@ -82,7 +141,7 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 //  400: badReq
 //	500: internal
 func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
-	log.Print("DeleteEmployee called...")
+	log.Print("DeleteEmployee called...\n")
 	var response map[string]string
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
