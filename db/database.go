@@ -151,6 +151,47 @@ func FindEmployee(id int) (model.Employee, error) {
 
 }
 
+// FindEmployeeDetails returns details of employee with given id
+func FindEmployeeDetails(id int) (model.EmployeeDetail, error) {
+	var det model.EmployeeDetail
+	var err error
+	det.Employee, err = FindEmployee(id)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println(err)
+		return det, err
+	case err != nil:
+		log.Println(err)
+		return det, err
+	}
+
+	// retrieve core skill info
+	q := `SELECT * FROM CoreSkill where employee_id = ?`
+	rows, err := getDB().Query(q, id)
+	if err != nil {
+		log.Println(err)
+		return det, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var skill model.CoreSkill
+		err := rows.Scan(&skill.ID, &skill.EnterTs, &skill.LastChangeTs, &skill.Active,
+			&skill.Skill, &skill.Sequence, &skill.EmployeeID, &skill.Proficiency)
+		if err != nil {
+			log.Println(err)
+			return det, err
+		}
+		det.Skills = append(det.Skills, skill)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Println(err)
+		return det, err
+	}
+	return det, nil
+
+}
+
 // FindAllEmployees returns all employees
 func FindAllEmployees() ([]model.Employee, error) {
 	var res []model.Employee

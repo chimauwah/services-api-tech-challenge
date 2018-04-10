@@ -26,7 +26,7 @@ func GetEmployee(w http.ResponseWriter, r *http.Request) {
 	emp, err := db.FindEmployee(id)
 	if err != nil {
 		log.Println(err)
-		response := createResponseMap(false, "500", err.Error())
+		response := createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -46,7 +46,7 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 	emps, err := db.FindAllEmployees()
 	if err != nil {
 		log.Println(err)
-		response := createResponseMap(false, "500", err.Error())
+		response := createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -63,6 +63,17 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	log.Println("GetEmployeeDetails called...")
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	det, err := db.FindEmployeeDetails(id)
+	if err != nil {
+		log.Println(err)
+		response := createResponseMap(false, "500", "Error: "+err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	json.NewEncoder(w).Encode(det)
+
 }
 
 // CreateEmployee swagger:route POST /api/employee employee createEmployee
@@ -82,14 +93,14 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&e)
 	if err != nil {
 		log.Println(err)
-		response := createResponseMap(false, "400", err.Error())
+		response := createResponseMap(false, "400", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	emp, err := db.AddEmployee(e)
 	if err != nil {
-		response := createResponseMap(false, "500", err.Error())
+		response := createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -123,7 +134,7 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	cnt, err := db.UpdateEmployee(id, e)
 	if err != nil {
-		response = createResponseMap(false, "500", err.Error())
+		response = createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -153,12 +164,12 @@ func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	cnt, err := db.DeleteEmployee(id)
 	if err != nil {
-		response = createResponseMap(false, "500", err.Error())
+		response = createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 	if cnt < 1 {
-		response = createResponseMap(false, "200", "Could not delete record")
+		response = createResponseMap(false, "200", "No record found to delete.")
 	} else {
 		response = createResponseMap(true, "200", "Record deleted successfully.")
 	}
