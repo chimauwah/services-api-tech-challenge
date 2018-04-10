@@ -54,45 +54,24 @@ type EmployeeResponse struct {
 type Employee struct {
 	ID                    int             `json:"id"`
 	EnterTs               helper.NullTime `json:"enterts"`
-	LastChangeTs          helper.NullTime `json:"lastchangets"`
 	Active                bool            `json:"active"`
 	FirstName             sql.NullString  `json:"firstname"`
 	LastName              sql.NullString  `json:"lastname"`
-	Address1              sql.NullString  `json:"address1"`
-	Address2              sql.NullString  `json:"address2"`
-	City                  sql.NullString  `json:"city"`
-	State                 sql.NullString  `json:"state"`
-	Zip                   sql.NullString  `json:"zip"`
 	CellPhone             sql.NullString  `json:"cellphone"`
-	HomePhone             sql.NullString  `json:"homephone"`
-	Picture               []byte          `json:"picture"`
 	Title                 sql.NullString  `json:"title"`
-	Role                  sql.NullInt64   `json:"role"`
-	IPPhone               sql.NullString  `json:"ipphone"`
 	Samaccountname        sql.NullString  `json:"samaccountname"`
 	Mail                  sql.NullString  `json:"mail"`
 	PrimaryPa             sql.NullString  `json:"primarypa"`
-	SecondaryPa           sql.NullString  `json:"secondarypa"`
 	Office                sql.NullString  `json:"office"`
 	ManagerDn             sql.NullString  `json:"managerdn"`
-	TravelPref            sql.NullString  `json:"travelpref"`
 	ManagerSamaccountname sql.NullString  `json:"managersamaccountname"`
-	LastHash              sql.NullInt64   `json:"lasthash"`
-	ImageHash             sql.NullString  `json:"imagehash"`
-	NickName              sql.NullString  `json:"nickname"`
-	ClientLoc             sql.NullString  `json:"clientloc"`
+	TravelPref            sql.NullString  `json:"travelpref"`
 }
 
 // CoreSkill struct
 type CoreSkill struct {
-	ID           int             `json:"id"`
-	EnterTs      helper.NullTime `json:"enterts"`
-	LastChangeTs helper.NullTime `json:"lastchangets"`
-	Active       bool            `json:"active"`
-	Skill        sql.NullString  `json:"skill"`
-	Sequence     sql.NullInt64   `json:"sequence"`
-	EmployeeID   int             `json:"employeeid"`
-	Proficiency  sql.NullString  `json:"proficiency"`
+	Skill       sql.NullString `json:"skill"`
+	Proficiency sql.NullString `json:"proficiency"`
 }
 
 // An EmployeeDetail model

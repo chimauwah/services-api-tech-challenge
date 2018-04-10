@@ -25,7 +25,7 @@ CREATE TABLE Employee (
   manager_dn varchar(255) DEFAULT NULL,
   travel_pref varchar(255) DEFAULT NULL,
   manager_samaccountname varchar(255) DEFAULT NULL,
-  last_hash integer NOT NULL,
+  last_hash integer DEFAULT NULL,
   image_hash varchar(100) DEFAULT NULL,
   nick_name varchar(255) DEFAULT NULL,
   client_loc varchar(255) DEFAULT NULL

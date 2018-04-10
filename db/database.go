@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/chimauwah/services-api-tech-challenge/model"
 	"github.com/gchaincl/dotsql"
@@ -52,9 +53,6 @@ func Init() {
 	executeScript(db, dot, "insert-coreskill")
 	executeScript(db, dot, "insert-coreskill2")
 
-	// testSelect(db)
-	// stmt, err := dot.Prepare(db, "drop-users-table")
-	// restul, err := stmt.Exec()
 }
 
 // loadSQLFile imports SQL queries from given file.
@@ -79,47 +77,16 @@ func executeScript(db *sql.DB, dot *dotsql.DotSql, scriptName string) {
 	}
 }
 
-func testSelect(db *sql.DB) {
-	//test reading an item
-	stmt := "SELECT id, first_name, last_name FROM Employee WHERE office = ? and active = ?"
-	rows, err := db.Query(stmt, "Charlotte", 1)
-	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-
-	var (
-		id    int
-		fname string
-		lname string
-	)
-
-	cnt := 0
-	for rows.Next() {
-		err := rows.Scan(&id, &fname, &lname)
-		if err != nil {
-			fmt.Printf("error occurred running (%s): (%s)\n", stmt, err)
-		}
-		fmt.Printf("ID: (%d) | NAME: (%s %s) \n", id, fname, lname)
-		cnt++
-	}
-	fmt.Printf("Total rows returned: (%d)\n", cnt)
-}
-
 // AddEmployee adds an Employee to the datastore and returns the Employee with the generated id
 func AddEmployee(emp model.Employee) (model.Employee, error) {
-	q := `INSERT INTO Employee (id, enter_ts, last_change_ts, active, first_name, last_name, 
-		address1,address2,city,state,zip,cell_phone,home_phone,picture,title,role,ip_phone,
-		samaccountname,mail,primary_pa,secondary_pa,office,manager_dn,travel_pref,
-		manager_samaccountname,last_hash,image_hash,nick_name,client_loc) VALUES
-		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+	q := `INSERT INTO Employee (id, enter_ts, active, first_name, last_name, cell_phone, title, 
+		samaccountname, mail, primary_pa, office, manager_dn, manager_samaccountname, travel_pref) 
+		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
 
 	emp.ID = getEmployeeNextSequence()
-	_, err := getDB().Exec(q, emp.ID, emp.EnterTs, emp.LastChangeTs, emp.Active, emp.FirstName,
-		emp.LastName, emp.Address1, emp.Address2, emp.City, emp.State, emp.Zip, emp.CellPhone,
-		emp.HomePhone, emp.Picture, emp.Title, emp.Role, emp.IPPhone, emp.Samaccountname,
-		emp.Mail, emp.PrimaryPa, emp.SecondaryPa, emp.Office, emp.ManagerDn, emp.TravelPref,
-		emp.ManagerSamaccountname, emp.LastHash, emp.ImageHash, emp.NickName, emp.ClientLoc)
+	_, err := getDB().Exec(q, emp.ID, time.Now(), 1, emp.FirstName, emp.LastName, emp.CellPhone,
+		emp.Title, emp.Samaccountname, emp.Mail, emp.PrimaryPa, emp.Office, emp.ManagerDn,
+		emp.ManagerSamaccountname, emp.TravelPref)
 	if err != nil {
 		log.Println(err)
 		return emp, err
@@ -130,14 +97,12 @@ func AddEmployee(emp model.Employee) (model.Employee, error) {
 // FindEmployee returns employee with given id
 func FindEmployee(id int) (model.Employee, error) {
 	var emp model.Employee
-	q := "SELECT * FROM Employee where id = ?"
-	err := getDB().QueryRow(q, id).Scan(&emp.ID, &emp.EnterTs, &emp.LastChangeTs,
-		&emp.Active, &emp.FirstName, &emp.LastName, &emp.Address1, &emp.Address2,
-		&emp.City, &emp.State, &emp.Zip, &emp.CellPhone, &emp.HomePhone, &emp.Picture,
-		&emp.Title, &emp.Role, &emp.IPPhone, &emp.Samaccountname, &emp.Mail,
-		&emp.PrimaryPa, &emp.SecondaryPa, &emp.Office, &emp.ManagerDn,
-		&emp.TravelPref, &emp.ManagerSamaccountname, &emp.LastHash,
-		&emp.ImageHash, &emp.NickName, &emp.ClientLoc)
+	q := `SELECT id, enter_ts, active, first_name, last_name, cell_phone, title, samaccountname, 
+	mail, primary_pa, office, manager_dn, manager_samaccountname, travel_pref 
+	FROM Employee where id = ?`
+	err := getDB().QueryRow(q, id).Scan(&emp.ID, &emp.EnterTs, &emp.Active, &emp.FirstName,
+		&emp.LastName, &emp.CellPhone, &emp.Title, &emp.Samaccountname, &emp.Mail, &emp.PrimaryPa,
+		&emp.Office, &emp.ManagerDn, &emp.ManagerSamaccountname, &emp.TravelPref)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println(err)
@@ -166,7 +131,7 @@ func FindEmployeeDetails(id int) (model.EmployeeDetail, error) {
 	}
 
 	// retrieve core skill info
-	q := `SELECT * FROM CoreSkill where employee_id = ?`
+	q := `SELECT skill, proficiency FROM CoreSkill where employee_id = ?`
 	rows, err := getDB().Query(q, id)
 	if err != nil {
 		log.Println(err)
@@ -175,8 +140,7 @@ func FindEmployeeDetails(id int) (model.EmployeeDetail, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var skill model.CoreSkill
-		err := rows.Scan(&skill.ID, &skill.EnterTs, &skill.LastChangeTs, &skill.Active,
-			&skill.Skill, &skill.Sequence, &skill.EmployeeID, &skill.Proficiency)
+		err := rows.Scan(&skill.Skill, &skill.Proficiency)
 		if err != nil {
 			log.Println(err)
 			return det, err
@@ -195,7 +159,9 @@ func FindEmployeeDetails(id int) (model.EmployeeDetail, error) {
 // FindAllEmployees returns all employees
 func FindAllEmployees() ([]model.Employee, error) {
 	var res []model.Employee
-	q := "SELECT * FROM Employee"
+	q := `SELECT id, enter_ts, active, first_name, last_name, cell_phone, title, samaccountname, 
+	mail, primary_pa, office, manager_dn, manager_samaccountname, travel_pref 
+	FROM Employee`
 	rows, err := getDB().Query(q)
 	if err != nil {
 		log.Println(err)
@@ -204,13 +170,10 @@ func FindAllEmployees() ([]model.Employee, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var emp model.Employee
-		err := rows.Scan(&emp.ID, &emp.EnterTs, &emp.LastChangeTs, &emp.Active,
-			&emp.FirstName, &emp.LastName, &emp.Address1, &emp.Address2, &emp.City,
-			&emp.State, &emp.Zip, &emp.CellPhone, &emp.HomePhone, &emp.Picture,
-			&emp.Title, &emp.Role, &emp.IPPhone, &emp.Samaccountname, &emp.Mail,
-			&emp.PrimaryPa, &emp.SecondaryPa, &emp.Office, &emp.ManagerDn,
-			&emp.TravelPref, &emp.ManagerSamaccountname, &emp.LastHash,
-			&emp.ImageHash, &emp.NickName, &emp.ClientLoc)
+		err := rows.Scan(&emp.ID, &emp.EnterTs, &emp.Active, &emp.FirstName,
+			&emp.LastName, &emp.CellPhone, &emp.Title, &emp.Samaccountname, &emp.Mail,
+			&emp.PrimaryPa, &emp.Office, &emp.ManagerDn, &emp.ManagerSamaccountname,
+			&emp.TravelPref)
 		if err != nil {
 			log.Println(err)
 			return res, err
@@ -242,20 +205,13 @@ func DeleteEmployee(id int) (int64, error) {
 func UpdateEmployee(id int, emp model.Employee) (int64, error) {
 	q := `UPDATE Employee SET 
 	active = coalesce(?,active), first_name = coalesce(?,first_name), last_name = coalesce(?,last_name),
-	address1 = coalesce(?,address1), address2 = coalesce(?,address2), city = coalesce(?,city), 
-	state = coalesce(?,state), zip = coalesce(?,zip), cell_phone = coalesce(?,cell_phone), 
-	home_phone = coalesce(?,home_phone), picture = coalesce(?,picture), title = coalesce(?,title), 
-	role = coalesce(?,role), ip_phone = coalesce(?,ip_phone), samaccountname = coalesce(?,samaccountname), 
-	mail = coalesce(?,mail), primary_pa = coalesce(?,primary_pa), secondary_pa = coalesce(?,secondary_pa), 
-	office = coalesce(?,office), manager_dn = coalesce(?,manager_dn), travel_pref = coalesce(?,travel_pref), 
-	manager_samaccountname = coalesce(?,manager_samaccountname), last_hash = coalesce(?,last_hash), 
-	image_hash = coalesce(?,image_hash), nick_name = coalesce(?,nick_name), client_loc = coalesce(?,client_loc)
-	WHERE id = ?`
-	res, err := getDB().Exec(q, emp.Active, emp.FirstName,
-		emp.LastName, emp.Address1, emp.Address2, emp.City, emp.State, emp.Zip, emp.CellPhone,
-		emp.HomePhone, emp.Picture, emp.Title, emp.Role, emp.IPPhone, emp.Samaccountname,
-		emp.Mail, emp.PrimaryPa, emp.SecondaryPa, emp.Office, emp.ManagerDn, emp.TravelPref,
-		emp.ManagerSamaccountname, emp.LastHash, emp.ImageHash, emp.NickName, emp.ClientLoc, id)
+	cell_phone = coalesce(?,cell_phone), title = coalesce(?,title), samaccountname = coalesce(?,samaccountname), 
+	mail = coalesce(?,mail), primary_pa = coalesce(?,primary_pa), office = coalesce(?,office), 
+	manager_dn = coalesce(?,manager_dn), manager_samaccountname = coalesce(?,manager_samaccountname),
+	travel_pref = coalesce(?,travel_pref) WHERE id = ?`
+	res, err := getDB().Exec(q, emp.Active, emp.FirstName, emp.LastName, emp.CellPhone,
+		emp.Title, emp.Samaccountname, emp.Mail, emp.PrimaryPa, emp.Office, emp.ManagerDn,
+		emp.ManagerSamaccountname, emp.TravelPref, id)
 	if err != nil {
 		log.Println(err)
 		return 0, err
