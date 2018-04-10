@@ -82,18 +82,6 @@ type Employee struct {
 	ClientLoc             sql.NullString `json:"clientloc"`
 }
 
-// Device struct
-type Device struct {
-	ID             int            `json:"id"`
-	EnterTs        time.Time      `json:"enterts"`
-	LastChangeTs   time.Time      `json:"lastchangets"`
-	Active         bool           `json:"active"`
-	DeviceType     sql.NullString `json:"devicetype"`
-	NotificationID sql.NullString `json:"notifcationid"`
-	DeviceID       sql.NullString `json:"deviceId"`
-	EmployeeID     int            `json:"employeeid"`
-}
-
 // CoreSkill struct
 type CoreSkill struct {
 	ID           int            `json:"id"`
@@ -104,34 +92,6 @@ type CoreSkill struct {
 	Sequence     sql.NullInt64  `json:"sequence"`
 	EmployeeID   int            `json:"employeeid"`
 	Proficiency  sql.NullString `json:"proficiency"`
-}
-
-// Checkin struct
-type Checkin struct {
-	ID             int            `json:"id"`
-	EnterTs        time.Time      `json:"enterts"`
-	LastChangeTs   time.Time      `json:"lastchangets"`
-	Active         bool           `json:"active"`
-	GeoID          sql.NullString `json:"geoid"`
-	LAT            float32        `json:"lat"`
-	LNG            float32        `json:"lng"`
-	Name           sql.NullString `json:"name"`
-	Distance       float32        `json:"distance"`
-	NotifRequested sql.NullInt64  `json:"notifrequested"`
-	NotiExpiration sql.NullInt64  `json:"notifrequsted"`
-	EmployeeID     int            `json:"employeeid"`
-}
-
-// PracticeArea struct
-type PracticeArea struct {
-	ID           int            `json:"id"`
-	EnterTs      time.Time      `json:"enterts"`
-	LastChangeTs time.Time      `json:"lastchangets"`
-	Active       bool           `json:"active"`
-	Code         sql.NullString `json:"code"`
-	Description  sql.NullString `json:"description"`
-	PrimaryOnly  bool           `json:"primaryonly"`
-	Sequence     sql.NullInt64  `json:"sequence"`
 }
 
 // Success response

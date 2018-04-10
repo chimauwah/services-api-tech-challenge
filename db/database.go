@@ -42,18 +42,13 @@ func Init() {
 
 	// run schema scripts
 	executeScript(db, dot, "create-employee-table")
-	executeScript(db, dot, "create-practicearea-table")
-	executeScript(db, dot, "create-checkin-table")
 	executeScript(db, dot, "create-coreskill-table")
-	executeScript(db, dot, "create-device-table")
 
 	// load seed date from file
 	dot, err = loadSQLFile("db/seed.sql")
 
 	// run seed data scripts
 	executeScript(db, dot, "insert-employee")
-	executeScript(db, dot, "insert-practicearea")
-	executeScript(db, dot, "insert-checkin")
 	executeScript(db, dot, "insert-coreskill")
 	executeScript(db, dot, "insert-coreskill2")
 
