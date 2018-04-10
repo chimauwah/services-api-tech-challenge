@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"services-api-tech-challenge/db"
-	"services-api-tech-challenge/handler"
 
+	"github.com/chimauwah/services-api-tech-challenge/db"
+	"github.com/chimauwah/services-api-tech-challenge/handler"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )

@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"services-api-tech-challenge/db"
-	"services-api-tech-challenge/model"
 	"strconv"
 
+	"github.com/chimauwah/services-api-tech-challenge/db"
+	"github.com/chimauwah/services-api-tech-challenge/model"
 	"github.com/gorilla/mux"
 )
 
@@ -20,6 +20,7 @@ import (
 //	500: internal
 func GetEmployee(w http.ResponseWriter, r *http.Request) {
 	log.Println("GetEmployee called...")
+	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	emp, err := db.FindEmployee(id)
@@ -40,6 +41,7 @@ func GetEmployee(w http.ResponseWriter, r *http.Request) {
 //	200: employeeResponse
 //	500: internal
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	log.Println("GetEmployees called...")
 	emps, err := db.FindAllEmployees()
 	if err != nil {
@@ -59,6 +61,7 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 //	200: employeeResponse
 //	500: internal
 func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	log.Println("GetEmployeeDetails called...")
 }
 
@@ -72,6 +75,7 @@ func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func CreateEmployee(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	log.Println("CreateEmployee called...")
 	decoder := json.NewDecoder(r.Body)
 	var e model.Employee
@@ -102,6 +106,7 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	log.Print("UpdateEmployee called...\n")
 	decoder := json.NewDecoder(r.Body)
 	var e model.Employee
@@ -141,6 +146,7 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 //  400: badReq
 //	500: internal
 func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	log.Print("DeleteEmployee called...\n")
 	var response map[string]string
 	vars := mux.Vars(r)

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"services-api-tech-challenge/model"
 
+	"github.com/chimauwah/services-api-tech-challenge/model"
 	"github.com/gchaincl/dotsql"
 )
 
