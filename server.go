@@ -36,13 +36,13 @@ func main() {
 	router := mux.NewRouter()
 
 	// route handlers / endpoints
-	// router.Methods("GET").Path("/api/employeez").HandlerFunc(handler.GetEmployees)
 	router.HandleFunc("/api/employees", handler.GetEmployees).Methods("GET")
-	router.HandleFunc("/api/employee/{id}", handler.GetEmployee).Methods("GET")
-	router.HandleFunc("/api/employee/details/{id}", handler.GetEmployeeDetails).Methods("GET")
+	router.HandleFunc("/api/employee/{id:[0-9]+}", handler.GetEmployee).Methods("GET")
+	router.HandleFunc("/api/employee/details/{id:[0-9]+}", handler.GetEmployeeDetails).Methods("GET")
+	router.HandleFunc("/api/employee/search", handler.SearchEmployees).Methods("GET")
 	router.HandleFunc("/api/employee", handler.CreateEmployee).Methods("POST")
-	router.HandleFunc("/api/employee/{id}", handler.UpdateEmployee).Methods("PUT")
-	router.HandleFunc("/api/employee/{id}", handler.DeleteEmployee).Methods("DELETE")
+	router.HandleFunc("/api/employee/{id:[0-9]+}", handler.UpdateEmployee).Methods("PUT")
+	router.HandleFunc("/api/employee/{id:[0-9]+}", handler.DeleteEmployee).Methods("DELETE")
 
 	fmt.Println("Listening on port :8080...")
 	log.Fatal(http.ListenAndServe(":8080", router))
