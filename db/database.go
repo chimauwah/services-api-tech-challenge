@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/url"
 	"time"
 
 	"github.com/chimauwah/services-api-tech-challenge/model"
@@ -188,6 +189,40 @@ func FindAllEmployees() ([]model.Employee, error) {
 	return res, nil
 }
 
+// SearchEmployees returns all employee that match provided criteria
+func SearchEmployees(args url.Values) ([]model.Employee, error) {
+	var emps []model.Employee
+	q := `SELECT id, enter_ts, active, first_name, last_name, cell_phone, title, samaccountname, 
+	mail, primary_pa, office, manager_dn, manager_samaccountname, travel_pref 
+	FROM Employee`
+	buildWhereClause(&q, args)
+	rows, err := getDB().Query(q)
+	log.Println(q)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var emp model.Employee
+		err := rows.Scan(&emp.ID, &emp.EnterTs, &emp.Active, &emp.FirstName,
+			&emp.LastName, &emp.CellPhone, &emp.Title, &emp.Samaccountname, &emp.Mail,
+			&emp.PrimaryPa, &emp.Office, &emp.ManagerDn, &emp.ManagerSamaccountname,
+			&emp.TravelPref)
+		if err != nil {
+			log.Println(err)
+			return emps, err
+		}
+		emps = append(emps, emp)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Println(err)
+		return emps, err
+	}
+	return emps, nil
+}
+
 // DeleteEmployee deletes the employee with given id
 func DeleteEmployee(id int) (int64, error) {
 	q := "DELETE FROM Employee WHERE ID = ?"
@@ -230,3 +265,28 @@ func getEmployeeNextSequence() (seq int) {
 	}
 	return seq + 1
 }
+
+func buildWhereClause(q *string, args url.Values) {
+	if len(args) > 0 {
+		*q += ` WHERE `
+		for k, v := range args {
+			*q += k + ` = "` + v[0] + `" and `
+		}
+		*q += `1 = 1`
+	}
+
+}
+
+// You can use interface types as arguments, in which case you can call the
+// function with any type that implements the given interface. In Go types
+// automatically implement any interfaces if they have the interface's
+// methods. So if you want to accept all possible types, you can use empty
+// interface (interface{}) since all types implement that
+// func handleValueType(v interface{}) string {
+// 	switch v := v.(type) {
+// 	case string:
+// 		return "`" + v + "`"
+// 	case int:
+// 		return v
+// 	}
+// }

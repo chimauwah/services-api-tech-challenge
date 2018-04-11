@@ -76,6 +76,34 @@ func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// SearchEmployees swagger:route POST /api/employee/search employees listEmployees
+//
+// Resource to search for an employee with provided criteria
+//
+// Responses:
+//	200: employeeResponse
+//  400: badReq
+//  422: validationError
+//	500: internal
+func SearchEmployees(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	log.Println("SearchEmployees called...")
+	vals := r.URL.Query()
+	emps, err := db.SearchEmployees(vals)
+	if err != nil {
+		log.Println(err)
+		response := createResponseMap(false, "500", "Error: "+err.Error())
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	if emps == nil {
+		response := createResponseMap(true, "200", "No results found")
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	json.NewEncoder(w).Encode(emps)
+}
+
 // CreateEmployee swagger:route POST /api/employee employee createEmployee
 //
 // Resource to create a single employee.
