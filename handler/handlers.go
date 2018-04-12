@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/chimauwah/services-api-tech-challenge/db"
 	"github.com/chimauwah/services-api-tech-challenge/model"
@@ -19,6 +20,8 @@ import (
 //	200: employeeResponse
 //	500: internal
 func GetEmployee(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	defer printExecTime(start)
 	log.Println("GetEmployee called...")
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
@@ -41,8 +44,10 @@ func GetEmployee(w http.ResponseWriter, r *http.Request) {
 //	200: employeeResponse
 //	500: internal
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	start := time.Now()
+	defer printExecTime(start)
 	log.Println("GetEmployees called...")
+	w.Header().Set("Content-Type", "application/json")
 	emps, err := db.FindAllEmployees()
 	if err != nil {
 		log.Println(err)
@@ -61,8 +66,10 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 //	200: employeeResponse
 //	500: internal
 func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	start := time.Now()
+	defer printExecTime(start)
 	log.Println("GetEmployeeDetails called...")
+	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	det, err := db.FindEmployeeDetails(id)
@@ -86,8 +93,10 @@ func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func SearchEmployees(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	start := time.Now()
+	defer printExecTime(start)
 	log.Println("SearchEmployees called...")
+	w.Header().Set("Content-Type", "application/json")
 	vals := r.URL.Query()
 	emps, err := db.SearchEmployees(vals)
 	if err != nil {
@@ -114,8 +123,10 @@ func SearchEmployees(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func CreateEmployee(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	start := time.Now()
+	defer printExecTime(start)
 	log.Println("CreateEmployee called...")
+	w.Header().Set("Content-Type", "application/json")
 	decoder := json.NewDecoder(r.Body)
 	var e model.Employee
 	err := decoder.Decode(&e)
@@ -128,6 +139,7 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 
 	emp, err := db.AddEmployee(e)
 	if err != nil {
+		log.Println(err)
 		response := createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
@@ -145,8 +157,10 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 //  422: validationError
 //	500: internal
 func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	defer printExecTime(start)
+	log.Println("UpdateEmployee called...")
 	w.Header().Set("Content-Type", "application/json")
-	log.Print("UpdateEmployee called...\n")
 	decoder := json.NewDecoder(r.Body)
 	var e model.Employee
 	err := decoder.Decode(&e)
@@ -162,6 +176,7 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	cnt, err := db.UpdateEmployee(id, e)
 	if err != nil {
+		log.Println(err)
 		response = createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
@@ -185,13 +200,16 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 //  400: badReq
 //	500: internal
 func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+	defer printExecTime(start)
+	log.Println("DeleteEmployee called...")
 	w.Header().Set("Content-Type", "application/json")
-	log.Print("DeleteEmployee called...\n")
 	var response map[string]string
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	cnt, err := db.DeleteEmployee(id)
 	if err != nil {
+		log.Println(err)
 		response = createResponseMap(false, "500", "Error: "+err.Error())
 		json.NewEncoder(w).Encode(response)
 		return
@@ -211,4 +229,8 @@ func createResponseMap(success bool, code string, msg string) map[string]string 
 		"Status":  code,
 		"Message": msg}
 	return res
+}
+
+func printExecTime(start time.Time) {
+	log.Printf("Total time to execute (%s) ", time.Since(start))
 }

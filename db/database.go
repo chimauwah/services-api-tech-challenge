@@ -89,7 +89,6 @@ func AddEmployee(emp model.Employee) (model.Employee, error) {
 		emp.Title, emp.Samaccountname, emp.Mail, emp.PrimaryPa, emp.Office, emp.ManagerDn,
 		emp.ManagerSamaccountname, emp.TravelPref)
 	if err != nil {
-		log.Println(err)
 		return emp, err
 	}
 	return emp, nil
@@ -106,10 +105,8 @@ func FindEmployee(id int) (model.Employee, error) {
 		&emp.Office, &emp.ManagerDn, &emp.ManagerSamaccountname, &emp.TravelPref)
 	switch {
 	case err == sql.ErrNoRows:
-		log.Println(err)
 		return emp, err
 	case err != nil:
-		log.Println(err)
 		return emp, err
 	default:
 		return emp, nil
@@ -121,21 +118,19 @@ func FindEmployee(id int) (model.Employee, error) {
 func FindEmployeeDetails(id int) (model.EmployeeDetail, error) {
 	var det model.EmployeeDetail
 	var err error
+	// retrieve employee
 	det.Employee, err = FindEmployee(id)
 	switch {
 	case err == sql.ErrNoRows:
-		log.Println(err)
 		return det, err
 	case err != nil:
-		log.Println(err)
 		return det, err
 	}
 
-	// retrieve core skill info
+	// retrieve all core skills for employee
 	q := `SELECT skill, proficiency FROM CoreSkill where employee_id = ?`
 	rows, err := getDB().Query(q, id)
 	if err != nil {
-		log.Println(err)
 		return det, err
 	}
 	defer rows.Close()
@@ -143,14 +138,12 @@ func FindEmployeeDetails(id int) (model.EmployeeDetail, error) {
 		var skill model.CoreSkill
 		err := rows.Scan(&skill.Skill, &skill.Proficiency)
 		if err != nil {
-			log.Println(err)
 			return det, err
 		}
 		det.Skills = append(det.Skills, skill)
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Println(err)
 		return det, err
 	}
 	return det, nil
@@ -165,7 +158,6 @@ func FindAllEmployees() ([]model.Employee, error) {
 	FROM Employee`
 	rows, err := getDB().Query(q)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -176,14 +168,12 @@ func FindAllEmployees() ([]model.Employee, error) {
 			&emp.PrimaryPa, &emp.Office, &emp.ManagerDn, &emp.ManagerSamaccountname,
 			&emp.TravelPref)
 		if err != nil {
-			log.Println(err)
 			return res, err
 		}
 		res = append(res, emp)
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Println(err)
 		return res, err
 	}
 	return res, nil
@@ -199,7 +189,6 @@ func SearchEmployees(args url.Values) ([]model.Employee, error) {
 	rows, err := getDB().Query(q)
 	log.Println(q)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -210,14 +199,12 @@ func SearchEmployees(args url.Values) ([]model.Employee, error) {
 			&emp.PrimaryPa, &emp.Office, &emp.ManagerDn, &emp.ManagerSamaccountname,
 			&emp.TravelPref)
 		if err != nil {
-			log.Println(err)
 			return emps, err
 		}
 		emps = append(emps, emp)
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Println(err)
 		return emps, err
 	}
 	return emps, nil
@@ -228,7 +215,6 @@ func DeleteEmployee(id int) (int64, error) {
 	q := "DELETE FROM Employee WHERE ID = ?"
 	res, err := getDB().Exec(q, id)
 	if err != nil {
-		log.Println(err)
 		return 0, err
 	}
 
@@ -248,7 +234,6 @@ func UpdateEmployee(id int, emp model.Employee) (int64, error) {
 		emp.Title, emp.Samaccountname, emp.Mail, emp.PrimaryPa, emp.Office, emp.ManagerDn,
 		emp.ManagerSamaccountname, emp.TravelPref, id)
 	if err != nil {
-		log.Println(err)
 		return 0, err
 	}
 
