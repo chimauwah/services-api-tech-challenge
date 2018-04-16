@@ -56,6 +56,18 @@
         ],
         "summary": "Retreive details for a specific employee.",
         "operationId": "listEmployeeDetails",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to retrieve details for",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "$ref": "#/responses/employeeDtlResponse"
@@ -406,7 +418,7 @@
         "active": {
           "type": "boolean",
           "x-go-name": "Active",
-          "example": false
+          "example": true
         },
         "cellphone": {
           "type": "string",
@@ -521,11 +533,6 @@
       "description": "An EmployeeDetailResponse response model",
       "schema": {
         "$ref": "#/definitions/EmployeeDetail"
-      },
-      "headers": {
-        "employeeDetails": {
-          "description": "EmployeeDetail model"
-        }
       }
     },
     "employeeResponse": {
@@ -542,11 +549,9 @@
     "employeesResponse": {
       "description": "An EmployeesResponse response model",
       "schema": {
-        "$ref": "#/definitions/Employee"
-      },
-      "headers": {
-        "employees": {
-          "description": "Employee model"
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Employee"
         }
       }
     },

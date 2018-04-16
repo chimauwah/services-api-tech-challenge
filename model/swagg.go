@@ -30,6 +30,19 @@ type swaggUpdateEmployeeReq struct {
 	Employee EmployeeSampleReq `json:"employee"`
 }
 
+// A GetEmployeeDetailsByIDPathParam model
+//
+// This is used for path parameters for get employee by id.
+//
+// swagger:parameters listEmployeeDetails
+type swaggGetEmployeeDetailsByIDParam struct {
+	// id of employee to retrieve details for
+	// in: path
+	// required: true
+	// example: 1710
+	ID int32 `json:"id"`
+}
+
 // A DeleteEmployeePathParam model
 //
 // This is the path parameter for deleting an employee by id.
@@ -131,14 +144,16 @@ type swaggEmployeeResponse struct {
 // An EmployeesResponse response model
 // swagger:response employeesResponse
 type swaggEmployeesResponse struct {
-	// Employee model
-	Employees Employee `json:"employees"`
+	// Employee list model
+	// in: body
+	Employees []*Employee `json:"employees"`
 }
 
 // An EmployeeDetailResponse response model
 // swagger:response employeeDtlResponse
 type swaggEmployeeDtlResponse struct {
-	// EmployeeDetail model
+	// EmployeeDetail list model
+	// in: body
 	EmployeeDetails EmployeeDetail `json:"employeeDetails"`
 }
 
