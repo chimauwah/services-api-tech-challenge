@@ -22,12 +22,12 @@
         "tags": [
           "employee"
         ],
-        "summary": "Resource to create a single employee.",
+        "summary": "Create a single employee.",
         "operationId": "createEmployee",
         "parameters": [
           {
             "x-go-name": "Employee",
-            "description": "The Employee to create",
+            "description": "The Employee to create.",
             "name": "employee",
             "in": "body",
             "required": true,
@@ -37,17 +37,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "$ref": "#/responses/employeeResponse"
           },
           "400": {
             "$ref": "#/responses/badReq"
           },
-          "422": {
-            "$ref": "#/responses/validationError"
-          },
           "500": {
-            "$ref": "#/responses/internal"
+            "$ref": "#/responses/errInternal"
           }
         }
       }
@@ -57,49 +54,198 @@
         "tags": [
           "employeedetails"
         ],
-        "summary": "Resource returning details for a specific employee.",
+        "summary": "Retreive details for a specific employee.",
         "operationId": "listEmployeeDetails",
         "responses": {
           "200": {
-            "$ref": "#/responses/employeeResponse"
+            "$ref": "#/responses/employeeDtlResponse"
           },
           "500": {
-            "$ref": "#/responses/internal"
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      }
+    },
+    "/api/employee/search": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Search for an employee with provided criteria.",
+        "operationId": "searchEmployees",
+        "parameters": [
+          {
+            "type": "string",
+            "example": "James",
+            "x-go-name": "FirstName",
+            "description": "search by first name",
+            "name": "first_name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Howlett",
+            "x-go-name": "LastName",
+            "description": "search last name",
+            "name": "last_name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Mutant",
+            "x-go-name": "Title",
+            "description": "search by title",
+            "name": "title",
+            "in": "query"
+          },
+          {
+            "pattern": "[0-1]{1}",
+            "type": "integer",
+            "format": "int32",
+            "example": 1,
+            "x-go-name": "Active",
+            "description": "search by active (1 or 2)",
+            "name": "active",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "(555) 867-5309",
+            "x-go-name": "CellPhone",
+            "description": "search by cellphone",
+            "name": "cell_phone",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "logan",
+            "x-go-name": "Samaccountname",
+            "description": "search by samaccountname",
+            "name": "samaccountname",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "logan@xmen.com",
+            "x-go-name": "Mail",
+            "description": "search by email",
+            "name": "mail",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "OPS",
+            "x-go-name": "PrimaryPa",
+            "description": "search by primary pa",
+            "name": "primary_pa",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Alberta",
+            "x-go-name": "Office",
+            "description": "search by office",
+            "name": "office",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "professorx",
+            "x-go-name": "ManagerSamaccountname",
+            "description": "search by manager samaccountname",
+            "name": "manager_samaccountname",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Potentially",
+            "x-go-name": "TravelPref",
+            "description": "search by travel preference",
+            "name": "travel_pref",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeesResponse"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
           }
         }
       }
     },
     "/api/employee/{id}": {
+      "get": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Retrieve employee with given id.",
+        "operationId": "getEmployee",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to retrieve",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      },
       "put": {
         "tags": [
           "employee"
         ],
-        "summary": "Resource to update an existing employee.",
+        "summary": "Update an existing employee.",
         "operationId": "updateEmployee",
         "parameters": [
           {
             "x-go-name": "Employee",
-            "description": "The Employee date with which to overwrite existing Employee",
+            "description": "The employee data with which to overwrite existing Employee.",
             "name": "employee",
             "in": "body",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Employee"
             }
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to retrieve",
+            "name": "id",
+            "in": "path",
+            "required": true
           }
         ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/employeeResponse"
+          "204": {
+            "$ref": "#/responses/noContent"
           },
           "400": {
             "$ref": "#/responses/badReq"
           },
-          "422": {
-            "$ref": "#/responses/validationError"
+          "404": {
+            "$ref": "#/responses/notFound"
           },
           "500": {
-            "$ref": "#/responses/internal"
+            "$ref": "#/responses/errInternal"
           }
         }
       },
@@ -107,17 +253,29 @@
         "tags": [
           "employee"
         ],
-        "summary": "Resource to delete an existing employee.",
+        "summary": "Delete an existing employee.",
         "operationId": "deleteEmployee",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to delete",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": {
-          "200": {
-            "$ref": "#/responses/employeeResponse"
+          "204": {
+            "$ref": "#/responses/noContent"
           },
-          "400": {
-            "$ref": "#/responses/badReq"
+          "404": {
+            "$ref": "#/responses/notFound"
           },
           "500": {
-            "$ref": "#/responses/internal"
+            "$ref": "#/responses/errInternal"
           }
         }
       }
@@ -127,20 +285,33 @@
         "tags": [
           "employees"
         ],
-        "summary": "Resource returning all employees.",
+        "summary": "Retrieve all employees.",
         "operationId": "listEmployees",
         "responses": {
           "200": {
-            "$ref": "#/responses/employeeResponse"
+            "$ref": "#/responses/employeesResponse"
           },
           "500": {
-            "$ref": "#/responses/internal"
+            "$ref": "#/responses/errInternal"
           }
         }
       }
     }
   },
   "definitions": {
+    "CoreSkill": {
+      "description": "CoreSkill struct",
+      "type": "object",
+      "properties": {
+        "proficiency": {
+          "$ref": "#/definitions/NullString"
+        },
+        "skill": {
+          "$ref": "#/definitions/NullString"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    },
     "Employee": {
       "description": "This is used for operations that involve an Employee",
       "type": "object",
@@ -150,299 +321,289 @@
           "type": "boolean",
           "x-go-name": "Active"
         },
-        "address1": {
-          "type": "string",
-          "x-go-name": "Address1"
-        },
-        "address2": {
-          "type": "string",
-          "x-go-name": "Address2"
-        },
         "cellphone": {
-          "type": "string",
-          "x-go-name": "CellPhone"
-        },
-        "city": {
-          "type": "string",
-          "x-go-name": "City"
-        },
-        "clientloc": {
-          "type": "string",
-          "x-go-name": "ClientLoc"
+          "$ref": "#/definitions/NullString"
         },
         "enterts": {
-          "type": "string",
-          "format": "date-time",
-          "x-go-name": "EnterTs"
+          "$ref": "#/definitions/NullTime"
         },
         "firstname": {
-          "type": "string",
-          "x-go-name": "FirstName"
-        },
-        "homephone": {
-          "type": "string",
-          "x-go-name": "HomePhone"
+          "$ref": "#/definitions/NullString"
         },
         "id": {
           "type": "integer",
           "format": "int64",
           "x-go-name": "ID"
         },
-        "imagehash": {
-          "type": "string",
-          "x-go-name": "ImageHash"
-        },
-        "ipphone": {
-          "type": "string",
-          "x-go-name": "IPPhone"
-        },
-        "lastchangets": {
-          "type": "string",
-          "format": "date-time",
-          "x-go-name": "LastChangeTs"
-        },
-        "lasthash": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "LastHash"
-        },
         "lastname": {
-          "type": "string",
-          "x-go-name": "LastName"
+          "$ref": "#/definitions/NullString"
         },
         "mail": {
-          "type": "string",
-          "x-go-name": "Mail"
+          "$ref": "#/definitions/NullString"
         },
         "managerdn": {
-          "type": "string",
-          "x-go-name": "ManagerDn"
+          "$ref": "#/definitions/NullString"
         },
         "managersamaccountname": {
-          "type": "string",
-          "x-go-name": "ManagerSamaccountname"
-        },
-        "nickname": {
-          "type": "string",
-          "x-go-name": "NickName"
+          "$ref": "#/definitions/NullString"
         },
         "office": {
-          "type": "string",
-          "x-go-name": "Office"
-        },
-        "picture": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "format": "uint8"
-          },
-          "x-go-name": "Picture"
+          "$ref": "#/definitions/NullString"
         },
         "primarypa": {
-          "type": "string",
-          "x-go-name": "PrimaryPa"
-        },
-        "role": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "Role"
+          "$ref": "#/definitions/NullString"
         },
         "samaccountname": {
-          "type": "string",
-          "x-go-name": "Samaccountname"
-        },
-        "secondarypa": {
-          "type": "string",
-          "x-go-name": "SecondaryPa"
-        },
-        "state": {
-          "type": "string",
-          "x-go-name": "State"
+          "$ref": "#/definitions/NullString"
         },
         "title": {
-          "type": "string",
-          "x-go-name": "Title"
+          "$ref": "#/definitions/NullString"
         },
         "travelpref": {
-          "type": "string",
-          "x-go-name": "TravelPref"
-        },
-        "zip": {
-          "type": "string",
-          "x-go-name": "Zip"
+          "$ref": "#/definitions/NullString"
         }
       },
-      "x-go-package": "services-api-tech-challenge/model"
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    },
+    "EmployeeDetail": {
+      "description": "This is used for operations that involve an EmployeeDetail.",
+      "type": "object",
+      "title": "An EmployeeDetail model",
+      "properties": {
+        "employee": {
+          "$ref": "#/definitions/Employee"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoreSkill"
+          },
+          "x-go-name": "Skills"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    },
+    "NullString": {
+      "description": "var s NullString\nerr := db.QueryRow(\"SELECT name FROM foo WHERE id=?\", id).Scan(\u0026s)\n...\nif s.Valid {\nuse s.String\n} else {\nNULL value\n}",
+      "type": "object",
+      "title": "NullString represents a string that may be null.\nNullString implements the Scanner interface so\nit can be used as a scan destination:",
+      "properties": {
+        "String": {
+          "type": "string"
+        },
+        "Valid": {
+          "type": "boolean"
+        }
+      },
+      "x-go-package": "database/sql"
+    },
+    "NullTime": {
+      "description": "NullTime represents a time.Time that may be null. NullTime implements the\nsql.Scanner interface so it can be used as a scan destination, similar to\nsql.NullString.\nFrom lib/pq on github: https://github.com/lib/pq/blob/8c6ee72f3e6bcb1542298dd5f76cb74af9742cec/encode.go#L586",
+      "type": "object",
+      "properties": {
+        "Time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Valid": {
+          "type": "boolean"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/helper"
     }
   },
   "responses": {
     "badReq": {
-      "description": "Error Bad Request",
+      "description": "Error: Bad Request",
       "schema": {
         "type": "object",
         "properties": {
-          "code": {
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Bad Request"
+          },
+          "status": {
             "description": "HTTP status code 400 - Status Bad Request",
             "type": "integer",
             "format": "int64",
-            "x-go-name": "Code"
+            "x-go-name": "Status",
+            "example": 400
           },
-          "message": {
-            "description": "Detailed error message",
-            "type": "string",
-            "x-go-name": "Message"
-          }
-        }
-      }
-    },
-    "bool": {
-      "description": "Boolean response",
-      "schema": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "description": "HTTP Status Code 200",
-            "type": "integer",
-            "format": "int64",
-            "x-go-name": "Code"
-          },
-          "data": {
-            "description": "Boolean true/false",
+          "success": {
+            "description": "Request failed - success is False",
             "type": "boolean",
-            "x-go-name": "Data"
+            "x-go-name": "Success",
+            "example": false
           }
         }
       }
     },
-    "conflict": {
-      "description": "Error Conflict",
+    "created": {
+      "description": "Created",
       "schema": {
         "type": "object",
         "properties": {
-          "code": {
-            "description": "HTTP status code 409 - Conflict",
+          "message": {
+            "description": "Detailed success message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "New resources created"
+          },
+          "status": {
+            "description": "HTTP status code 201 - Status Created",
             "type": "integer",
             "format": "int64",
-            "x-go-name": "Code"
+            "x-go-name": "Status",
+            "example": 201
           },
-          "message": {
-            "description": "Detailed error message",
-            "type": "string",
-            "x-go-name": "Message"
+          "success": {
+            "description": "Request fulfilled - success is true",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": true
           }
+        }
+      }
+    },
+    "employeeDtlResponse": {
+      "description": "An EmployeeDetailResponse response model",
+      "schema": {
+        "$ref": "#/definitions/EmployeeDetail"
+      },
+      "headers": {
+        "employeeDetails": {
+          "description": "EmployeeDetail model"
         }
       }
     },
     "employeeResponse": {
-      "description": "An EmployeeResponse response model\n\nThis is used for returning a response with status code and list of retrieved employees as body",
+      "description": "An EmployeeResponse response model",
       "schema": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "description": "HTTP status code 200 - Status OK",
-            "type": "integer",
-            "format": "int64",
-            "x-go-name": "Code"
-          },
-          "employees": {
-            "description": "Employee model",
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/Employee"
-            },
-            "x-go-name": "Payload"
-          }
+        "$ref": "#/definitions/Employee"
+      },
+      "headers": {
+        "employee": {
+          "description": "Employee model"
         }
       }
     },
-    "forbidden": {
-      "description": "Error Forbidden",
+    "employeesResponse": {
+      "description": "An EmployeesResponse response model",
+      "schema": {
+        "$ref": "#/definitions/Employee"
+      },
+      "headers": {
+        "employees": {
+          "description": "Employee model"
+        }
+      }
+    },
+    "errInternal": {
+      "description": "Error: Interval Server",
       "schema": {
         "type": "object",
         "properties": {
-          "code": {
-            "description": "HTTP status code 403 - Forbidden",
-            "type": "integer",
-            "format": "int64",
-            "x-go-name": "Code"
-          },
           "message": {
             "description": "Detailed error message",
             "type": "string",
-            "x-go-name": "Message"
-          }
-        }
-      }
-    },
-    "internal": {
-      "description": "Error Interval Server",
-      "schema": {
-        "type": "object",
-        "properties": {
-          "code": {
+            "x-go-name": "Message",
+            "example": "Internal server error"
+          },
+          "status": {
             "description": "HTTP status code 500 - Internal server error",
             "type": "integer",
             "format": "int64",
-            "x-go-name": "Code"
+            "x-go-name": "Status",
+            "example": 500
           },
+          "success": {
+            "description": "Request failed - success is False",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": false
+          }
+        }
+      }
+    },
+    "noContent": {
+      "description": "No Content",
+      "schema": {
+        "type": "object",
+        "properties": {
           "message": {
-            "description": "Detailed error message",
+            "description": "Detailed message",
             "type": "string",
-            "x-go-name": "Message"
+            "x-go-name": "Message",
+            "example": "Operation completed successfully"
+          },
+          "status": {
+            "description": "HTTP status code 204 - Status No Content",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 204
+          },
+          "success": {
+            "description": "Request fulfilled but nothing to return - success is true",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": true
           }
         }
       }
     },
     "notFound": {
-      "description": "Error Not Found",
+      "description": "Not found",
       "schema": {
         "type": "object",
         "properties": {
-          "code": {
-            "description": "HTTP status code 404 - Not Found",
+          "message": {
+            "description": "Detailed message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Nothing found"
+          },
+          "status": {
+            "description": "HTTP status code 404 - Status Not Found",
             "type": "integer",
             "format": "int64",
-            "x-go-name": "Code"
+            "x-go-name": "Status",
+            "example": 404
           },
-          "message": {
-            "description": "Detailed error message",
-            "type": "string",
-            "x-go-name": "Message"
+          "success": {
+            "description": "No result found - success is False",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": false
           }
         }
       }
     },
-    "ok": {
-      "description": "Success response",
+    "successResponse": {
+      "description": "Success",
       "schema": {
         "type": "object",
         "properties": {
-          "code": {
-            "description": "HTTP Status Code 200",
+          "message": {
+            "description": "Detailed success message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Operation completed successfully"
+          },
+          "status": {
+            "description": "HTTP status code 200 - Status OK",
             "type": "integer",
             "format": "int64",
-            "x-go-name": "Code"
-          }
-        }
-      }
-    },
-    "validationError": {
-      "description": "A ValidationError is a swagger response to represent error",
-      "schema": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "x-go-name": "Code"
+            "x-go-name": "Status",
+            "example": 200
           },
-          "field": {
-            "type": "string",
-            "x-go-name": "Field"
-          },
-          "message": {
-            "type": "string",
-            "x-go-name": "Message"
+          "success": {
+            "description": "Request call success - true",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": true
           }
         }
       }

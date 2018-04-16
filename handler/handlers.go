@@ -12,13 +12,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GetEmployee swagger:route GET /api/employee{id} employee employee
+// GetEmployee swagger:route GET /api/employee/{id} employee getEmployee
 //
-// Resource returning employee with given id.
+// Retrieve employee with given id.
 //
 // Responses:
 //	200: employeeResponse
-//	500: internal
+//	500: errInternal
 func GetEmployee(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -38,11 +38,11 @@ func GetEmployee(w http.ResponseWriter, r *http.Request) {
 
 // GetEmployees swagger:route GET /api/employees employees listEmployees
 //
-// Resource returning all employees.
+// Retrieve all employees.
 //
 // Responses:
-//	200: employeeResponse
-//	500: internal
+//	200: employeesResponse
+//	500: errInternal
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -60,11 +60,11 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 
 // GetEmployeeDetails swagger:route GET /api/employee/details/{id} employeedetails listEmployeeDetails
 //
-// Resource returning details for a specific employee.
+// Retreive details for a specific employee.
 //
 // Responses:
-//	200: employeeResponse
-//	500: internal
+//	200: employeeDtlResponse
+//	500: errInternal
 func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -83,15 +83,14 @@ func GetEmployeeDetails(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// SearchEmployees swagger:route POST /api/employee/search employees listEmployees
+// SearchEmployees swagger:route GET /api/employee/search employees searchEmployees
 //
-// Resource to search for an employee with provided criteria
+// Search for an employee with provided criteria.
 //
 // Responses:
-//	200: employeeResponse
-//  400: badReq
-//  422: validationError
-//	500: internal
+//	200: employeesResponse
+//  404: notFound
+//	500: errInternal
 func SearchEmployees(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -106,7 +105,7 @@ func SearchEmployees(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if emps == nil {
-		response := createResponseMap(true, "200", "No results found")
+		response := createResponseMap(false, "404", "No results found")
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -115,13 +114,12 @@ func SearchEmployees(w http.ResponseWriter, r *http.Request) {
 
 // CreateEmployee swagger:route POST /api/employee employee createEmployee
 //
-// Resource to create a single employee.
+// Create a single employee.
 //
 // Responses:
-//	200: employeeResponse
+//	201: employeeResponse
 //  400: badReq
-//  422: validationError
-//	500: internal
+//	500: errInternal
 func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -149,13 +147,13 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 
 // UpdateEmployee swagger:route PUT /api/employee/{id} employee updateEmployee
 //
-// Resource to update an existing employee.
+// Update an existing employee.
 //
 // Responses:
-//	200: employeeResponse
+//  204: noContent
 //  400: badReq
-//  422: validationError
-//	500: internal
+//  404: notFound
+//	500: errInternal
 func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -183,9 +181,9 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if cnt < 1 {
-		response = createResponseMap(false, "200", "Could not update record")
+		response = createResponseMap(false, "404", "Could not update record")
 	} else {
-		response = createResponseMap(true, "200", "Record updated successfully.")
+		response = createResponseMap(true, "204", "Record updated successfully.")
 	}
 	json.NewEncoder(w).Encode(response)
 
@@ -193,12 +191,12 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 
 // DeleteEmployee swagger:route DELETE /api/employee/{id} employee deleteEmployee
 //
-// Resource to delete an existing employee.
+// Delete an existing employee.
 //
 // Responses:
-//	200: employeeResponse
-//  400: badReq
-//	500: internal
+//  204: noContent
+//  404: notFound
+//	500: errInternal
 func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	defer printExecTime(start)
@@ -215,9 +213,9 @@ func DeleteEmployee(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if cnt < 1 {
-		response = createResponseMap(false, "200", "No record found to delete.")
+		response = createResponseMap(false, "404", "No record found to delete.")
 	} else {
-		response = createResponseMap(true, "200", "Record deleted successfully.")
+		response = createResponseMap(true, "204", "Record deleted successfully.")
 	}
 	json.NewEncoder(w).Encode(response)
 
