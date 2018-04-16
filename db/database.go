@@ -53,6 +53,7 @@ func Init() {
 	executeScript(db, dot, "insert-employee")
 	executeScript(db, dot, "insert-coreskill")
 	executeScript(db, dot, "insert-coreskill2")
+	executeScript(db, dot, "update-employee-nulls")
 
 }
 

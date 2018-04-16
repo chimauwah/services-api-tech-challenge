@@ -1,9 +1,5 @@
 package model
 
-import (
-	"database/sql"
-)
-
 // A GetEmployeeByIDPathParam model
 //
 // This is used for path parameters for get employee by id.
@@ -31,7 +27,7 @@ type swaggUpdateEmployeeReq struct {
 	// The employee data with which to overwrite existing Employee.
 	// in: body
 	// required: true
-	Employee Employee `json:"employee"`
+	Employee EmployeeSampleReq `json:"employee"`
 }
 
 // A DeleteEmployeePathParam model
@@ -122,7 +118,7 @@ type swaggCreateEmployeeReq struct {
 	// The Employee to create.
 	// in: body
 	// required: true
-	Employee Employee `json:"employee"`
+	Employee EmployeeSampleReq `json:"employee"`
 }
 
 // An EmployeeResponse response model
@@ -253,7 +249,7 @@ type swaggErrInternal struct {
 // This is used for as a sample request body for update employee and create employee.
 // swagger:parameters
 type EmployeeSampleReq struct {
-	// example: false
+	// example: true
 	Active bool `json:"active"`
 	// example: T'Challa
 	FirstName string `json:"firstname"`
@@ -262,7 +258,7 @@ type EmployeeSampleReq struct {
 	// example: (555) 555-5555
 	CellPhone string `json:"cellphone"`
 	// example: Black Panther
-	Title sql.NullString `json:"title"`
+	Title string `json:"title"`
 	// example: king
 	Samaccountname string `json:"samaccountname"`
 	// example: king@wakandamail.com

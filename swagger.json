@@ -32,7 +32,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Employee"
+              "$ref": "#/definitions/EmployeeSampleReq"
             }
           }
         ],
@@ -220,7 +220,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Employee"
+              "$ref": "#/definitions/EmployeeSampleReq"
             }
           },
           {
@@ -304,10 +304,12 @@
       "type": "object",
       "properties": {
         "proficiency": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "Proficiency"
         },
         "skill": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "Skill"
         }
       },
       "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
@@ -322,13 +324,17 @@
           "x-go-name": "Active"
         },
         "cellphone": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "CellPhone"
         },
         "enterts": {
-          "$ref": "#/definitions/NullTime"
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "EnterTs"
         },
         "firstname": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "FirstName"
         },
         "id": {
           "type": "integer",
@@ -336,31 +342,40 @@
           "x-go-name": "ID"
         },
         "lastname": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "LastName"
         },
         "mail": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "Mail"
         },
         "managerdn": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "ManagerDn"
         },
         "managersamaccountname": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "ManagerSamaccountname"
         },
         "office": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "Office"
         },
         "primarypa": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "PrimaryPa"
         },
         "samaccountname": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "Samaccountname"
         },
         "title": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "Title"
         },
         "travelpref": {
-          "$ref": "#/definitions/NullString"
+          "type": "string",
+          "x-go-name": "TravelPref"
         }
       },
       "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
@@ -383,33 +398,68 @@
       },
       "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
     },
-    "NullString": {
-      "description": "var s NullString\nerr := db.QueryRow(\"SELECT name FROM foo WHERE id=?\", id).Scan(\u0026s)\n...\nif s.Valid {\nuse s.String\n} else {\nNULL value\n}",
+    "EmployeeSampleReq": {
+      "description": "This is used for as a sample request body for update employee and create employee.",
       "type": "object",
-      "title": "NullString represents a string that may be null.\nNullString implements the Scanner interface so\nit can be used as a scan destination:",
+      "title": "An EmployeeSampleReq model",
       "properties": {
-        "String": {
-          "type": "string"
+        "active": {
+          "type": "boolean",
+          "x-go-name": "Active",
+          "example": false
         },
-        "Valid": {
-          "type": "boolean"
-        }
-      },
-      "x-go-package": "database/sql"
-    },
-    "NullTime": {
-      "description": "NullTime represents a time.Time that may be null. NullTime implements the\nsql.Scanner interface so it can be used as a scan destination, similar to\nsql.NullString.\nFrom lib/pq on github: https://github.com/lib/pq/blob/8c6ee72f3e6bcb1542298dd5f76cb74af9742cec/encode.go#L586",
-      "type": "object",
-      "properties": {
-        "Time": {
+        "cellphone": {
           "type": "string",
-          "format": "date-time"
+          "x-go-name": "CellPhone",
+          "example": "(555) 555-5555"
         },
-        "Valid": {
-          "type": "boolean"
+        "firstname": {
+          "type": "string",
+          "x-go-name": "FirstName",
+          "example": "T'Challa"
+        },
+        "lastname": {
+          "type": "string",
+          "x-go-name": "LastName",
+          "example": "N/A"
+        },
+        "mail": {
+          "type": "string",
+          "x-go-name": "Mail",
+          "example": "king@wakandamail.com"
+        },
+        "managersamaccountname": {
+          "type": "string",
+          "x-go-name": "ManagerSamaccountname",
+          "example": "tchaka"
+        },
+        "office": {
+          "type": "string",
+          "x-go-name": "Office",
+          "example": "Wakanda"
+        },
+        "primarypa": {
+          "type": "string",
+          "x-go-name": "PrimaryPa",
+          "example": "OPS"
+        },
+        "samaccountname": {
+          "type": "string",
+          "x-go-name": "Samaccountname",
+          "example": "king"
+        },
+        "title": {
+          "type": "string",
+          "x-go-name": "Title",
+          "example": "Black Panther"
+        },
+        "travelpref": {
+          "type": "string",
+          "x-go-name": "TravelPref",
+          "example": "Potentially"
         }
       },
-      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/helper"
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
     }
   },
   "responses": {

@@ -20802,3 +20802,12 @@ VALUES
 (80054319,'2016-11-13 05:21:13',NULL,1,'Version Control - GIT',11,5214,'Experienced'),
 (80054322,'2016-11-13 05:21:13',NULL,1,'Build Management - Gradle',12,5214,'Experienced'),
 (80054325,'2016-11-13 05:21:13',NULL,1,'Agile Developer',13,5214,'Experienced');
+
+-- name: update-employee-nulls
+update Employee set manager_samaccountname = 'N/A' where manager_samaccountname is null;
+update Employee set cell_phone = 'N/A' where cell_phone is null;
+update Employee set title = 'N/A' where title is null;
+update Employee set travel_pref = 'N/A' where travel_pref is null;
+update Employee set mail = 'N/A' where mail is null;
+update Employee set first_name = 'N/A' where first_name is null;
+update Employee set last_name = 'N/A' where last_name is null;

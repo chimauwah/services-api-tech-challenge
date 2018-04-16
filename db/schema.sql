@@ -41,6 +41,5 @@ CREATE TABLE CoreSkill (
   sequence INTEGER NOT NULL,
   employee_id INTEGER DEFAULT NULL,
   proficiency varchar(255) DEFAULT NULL,
-  -- UNIQUE KEY id2 (id),
   CONSTRAINT FK182F35D2476C24D4 FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );
