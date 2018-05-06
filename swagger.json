@@ -12,7 +12,15 @@
   "info": {
     "description": "This Rest API written in GoLang provides CRUD operations\nfor a directory of company employees",
     "title": "Services \u0026 Api Tech Challange #1",
-    "version": "0.0.1"
+    "contact": {
+      "name": "Chima Uwah",
+      "url": "https://github.com/chimauwah/services-api-tech-challenge",
+      "email": "cuwah@captechconsulting.com"
+    },
+    "version": "0.0.1",
+    "x-logo": {
+      "url": "https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/dev/OTWL.png"
+    }
   },
   "host": "localhost:8080",
   "basePath": "/",

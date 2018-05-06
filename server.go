@@ -7,6 +7,7 @@
 //     Host: localhost:8080
 //     BasePath: /
 //     Version: 0.0.1
+//	   Contact: Chima Uwah<cuwah@captechconsulting.com> https://github.com/chimauwah/services-api-tech-challenge
 //
 //     Consumes:
 //     - application/json
