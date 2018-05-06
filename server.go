@@ -24,6 +24,7 @@ import (
 
 	"github.com/chimauwah/services-api-tech-challenge/db"
 	"github.com/chimauwah/services-api-tech-challenge/handler"
+	"github.com/chimauwah/services-api-tech-challenge/middleware"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -43,6 +44,10 @@ func main() {
 	router.HandleFunc("/api/employee", handler.CreateEmployee).Methods("POST")
 	router.HandleFunc("/api/employee/{id:[0-9]+}", handler.UpdateEmployee).Methods("PUT")
 	router.HandleFunc("/api/employee/{id:[0-9]+}", handler.DeleteEmployee).Methods("DELETE")
+
+	redoc := middleware.Redoc(middleware.RedocOpts{}, router)
+
+	router.HandleFunc("/api/docs", redoc.ServeHTTP).Methods("GET")
 
 	fmt.Println("Listening on port :8080...")
 	log.Fatal(http.ListenAndServe(":8080", router))
