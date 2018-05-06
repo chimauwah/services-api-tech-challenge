@@ -1,0 +1,675 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "This Rest API written in GoLang provides CRUD operations\nfor a directory of company employees",
+    "title": "Services \u0026 Api Tech Challange #1",
+    "contact": {
+      "name": "Chima Uwah",
+      "url": "https://github.com/chimauwah/services-api-tech-challenge",
+      "email": "cuwah@captechconsulting.com"
+    },
+    "version": "0.0.1",
+    "x-logo": {
+      "url": "https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/dev/OTWL.png"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {
+    "/api/employee": {
+      "post": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Create a single employee.",
+        "operationId": "createEmployee",
+        "parameters": [
+          {
+            "x-go-name": "Employee",
+            "description": "The Employee to create.",
+            "name": "employee",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmployeeSampleReq"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      }
+    },
+    "/api/employee/details/{id}": {
+      "get": {
+        "tags": [
+          "employeedetails"
+        ],
+        "summary": "Retreive details for a specific employee.",
+        "operationId": "listEmployeeDetails",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to retrieve details for",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeDtlResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      }
+    },
+    "/api/employee/search": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Search for an employee with provided criteria.",
+        "operationId": "searchEmployees",
+        "parameters": [
+          {
+            "type": "string",
+            "example": "James",
+            "x-go-name": "FirstName",
+            "description": "search by first name",
+            "name": "first_name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Howlett",
+            "x-go-name": "LastName",
+            "description": "search last name",
+            "name": "last_name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Mutant",
+            "x-go-name": "Title",
+            "description": "search by title",
+            "name": "title",
+            "in": "query"
+          },
+          {
+            "pattern": "[0-1]{1}",
+            "type": "integer",
+            "format": "int32",
+            "example": 1,
+            "x-go-name": "Active",
+            "description": "search by active (1 or 2)",
+            "name": "active",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "(555) 867-5309",
+            "x-go-name": "CellPhone",
+            "description": "search by cellphone",
+            "name": "cell_phone",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "logan",
+            "x-go-name": "Samaccountname",
+            "description": "search by samaccountname",
+            "name": "samaccountname",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "logan@xmen.com",
+            "x-go-name": "Mail",
+            "description": "search by email",
+            "name": "mail",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "OPS",
+            "x-go-name": "PrimaryPa",
+            "description": "search by primary pa",
+            "name": "primary_pa",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Alberta",
+            "x-go-name": "Office",
+            "description": "search by office",
+            "name": "office",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "professorx",
+            "x-go-name": "ManagerSamaccountname",
+            "description": "search by manager samaccountname",
+            "name": "manager_samaccountname",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Potentially",
+            "x-go-name": "TravelPref",
+            "description": "search by travel preference",
+            "name": "travel_pref",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeesResponse"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      }
+    },
+    "/api/employee/{id}": {
+      "get": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Retrieve employee with given id.",
+        "operationId": "getEmployee",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to retrieve",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeeResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Update an existing employee.",
+        "operationId": "updateEmployee",
+        "parameters": [
+          {
+            "x-go-name": "Employee",
+            "description": "The employee data with which to overwrite existing Employee.",
+            "name": "employee",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmployeeSampleReq"
+            }
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to retrieve",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/responses/noContent"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "employee"
+        ],
+        "summary": "Delete an existing employee.",
+        "operationId": "deleteEmployee",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "example": 1710,
+            "x-go-name": "ID",
+            "description": "id of employee to delete",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/responses/noContent"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      }
+    },
+    "/api/employees": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Retrieve all employees.",
+        "operationId": "listEmployees",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/employeesResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errInternal"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CoreSkill": {
+      "description": "CoreSkill struct",
+      "type": "object",
+      "properties": {
+        "proficiency": {
+          "type": "string",
+          "x-go-name": "Proficiency"
+        },
+        "skill": {
+          "type": "string",
+          "x-go-name": "Skill"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    },
+    "Employee": {
+      "description": "This is used for operations that involve an Employee",
+      "type": "object",
+      "title": "An Employee model",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "x-go-name": "Active"
+        },
+        "cellphone": {
+          "type": "string",
+          "x-go-name": "CellPhone"
+        },
+        "enterts": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "EnterTs"
+        },
+        "firstname": {
+          "type": "string",
+          "x-go-name": "FirstName"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "lastname": {
+          "type": "string",
+          "x-go-name": "LastName"
+        },
+        "mail": {
+          "type": "string",
+          "x-go-name": "Mail"
+        },
+        "managerdn": {
+          "type": "string",
+          "x-go-name": "ManagerDn"
+        },
+        "managersamaccountname": {
+          "type": "string",
+          "x-go-name": "ManagerSamaccountname"
+        },
+        "office": {
+          "type": "string",
+          "x-go-name": "Office"
+        },
+        "primarypa": {
+          "type": "string",
+          "x-go-name": "PrimaryPa"
+        },
+        "samaccountname": {
+          "type": "string",
+          "x-go-name": "Samaccountname"
+        },
+        "title": {
+          "type": "string",
+          "x-go-name": "Title"
+        },
+        "travelpref": {
+          "type": "string",
+          "x-go-name": "TravelPref"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    },
+    "EmployeeDetail": {
+      "description": "This is used for operations that involve an EmployeeDetail.",
+      "type": "object",
+      "title": "An EmployeeDetail model",
+      "properties": {
+        "employee": {
+          "$ref": "#/definitions/Employee"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoreSkill"
+          },
+          "x-go-name": "Skills"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    },
+    "EmployeeSampleReq": {
+      "description": "This is used for as a sample request body for update employee and create employee.",
+      "type": "object",
+      "title": "An EmployeeSampleReq model",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "x-go-name": "Active",
+          "example": true
+        },
+        "cellphone": {
+          "type": "string",
+          "x-go-name": "CellPhone",
+          "example": "(555) 555-5555"
+        },
+        "firstname": {
+          "type": "string",
+          "x-go-name": "FirstName",
+          "example": "T'Challa"
+        },
+        "lastname": {
+          "type": "string",
+          "x-go-name": "LastName",
+          "example": "N/A"
+        },
+        "mail": {
+          "type": "string",
+          "x-go-name": "Mail",
+          "example": "king@wakandamail.com"
+        },
+        "managersamaccountname": {
+          "type": "string",
+          "x-go-name": "ManagerSamaccountname",
+          "example": "tchaka"
+        },
+        "office": {
+          "type": "string",
+          "x-go-name": "Office",
+          "example": "Wakanda"
+        },
+        "primarypa": {
+          "type": "string",
+          "x-go-name": "PrimaryPa",
+          "example": "OPS"
+        },
+        "samaccountname": {
+          "type": "string",
+          "x-go-name": "Samaccountname",
+          "example": "king"
+        },
+        "title": {
+          "type": "string",
+          "x-go-name": "Title",
+          "example": "Black Panther"
+        },
+        "travelpref": {
+          "type": "string",
+          "x-go-name": "TravelPref",
+          "example": "Potentially"
+        }
+      },
+      "x-go-package": "github.com/chimauwah/services-api-tech-challenge/model"
+    }
+  },
+  "responses": {
+    "badReq": {
+      "description": "Error: Bad Request",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Bad Request"
+          },
+          "status": {
+            "description": "HTTP status code 400 - Status Bad Request",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 400
+          },
+          "success": {
+            "description": "Request failed - success is False",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": false
+          }
+        }
+      }
+    },
+    "created": {
+      "description": "Created",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Detailed success message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "New resources created"
+          },
+          "status": {
+            "description": "HTTP status code 201 - Status Created",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 201
+          },
+          "success": {
+            "description": "Request fulfilled - success is true",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": true
+          }
+        }
+      }
+    },
+    "employeeDtlResponse": {
+      "description": "An EmployeeDetailResponse response model",
+      "schema": {
+        "$ref": "#/definitions/EmployeeDetail"
+      }
+    },
+    "employeeResponse": {
+      "description": "An EmployeeResponse response model",
+      "schema": {
+        "$ref": "#/definitions/Employee"
+      },
+      "headers": {
+        "employee": {
+          "description": "Employee model"
+        }
+      }
+    },
+    "employeesResponse": {
+      "description": "An EmployeesResponse response model",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Employee"
+        }
+      }
+    },
+    "errInternal": {
+      "description": "Error: Interval Server",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Internal server error"
+          },
+          "status": {
+            "description": "HTTP status code 500 - Internal server error",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 500
+          },
+          "success": {
+            "description": "Request failed - success is False",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": false
+          }
+        }
+      }
+    },
+    "noContent": {
+      "description": "No Content",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Detailed message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Operation completed successfully"
+          },
+          "status": {
+            "description": "HTTP status code 204 - Status No Content",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 204
+          },
+          "success": {
+            "description": "Request fulfilled but nothing to return - success is true",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": true
+          }
+        }
+      }
+    },
+    "notFound": {
+      "description": "Not found",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Detailed message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Nothing found"
+          },
+          "status": {
+            "description": "HTTP status code 404 - Status Not Found",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 404
+          },
+          "success": {
+            "description": "No result found - success is False",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": false
+          }
+        }
+      }
+    },
+    "successResponse": {
+      "description": "Success",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Detailed success message",
+            "type": "string",
+            "x-go-name": "Message",
+            "example": "Operation completed successfully"
+          },
+          "status": {
+            "description": "HTTP status code 200 - Status OK",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Status",
+            "example": 200
+          },
+          "success": {
+            "description": "Request call success - true",
+            "type": "boolean",
+            "x-go-name": "Success",
+            "example": true
+          }
+        }
+      }
+    }
+  }
+}
