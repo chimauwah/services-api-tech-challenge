@@ -33,7 +33,7 @@ func (r *RedocOpts) EnsureDefaults() {
 		r.Path = "api/docs"
 	}
 	if r.SpecURL == "" {
-		r.SpecURL = "https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/dev/swagger.json"
+		r.SpecURL = "https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/master/swagger.json"
 	}
 	if r.RedocURL == "" {
 		r.RedocURL = redocLatest

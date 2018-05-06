@@ -17,9 +17,9 @@
       "url": "https://github.com/chimauwah/services-api-tech-challenge",
       "email": "cuwah@captechconsulting.com"
     },
-    "version": "0.0.1",
+    "version": "1.0.0",
     "x-logo": {
-      "url": "https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/dev/OTWL.png"
+      "url": "https://raw.githubusercontent.com/chimauwah/services-api-tech-challenge/master/OTWL.png"
     }
   },
   "host": "localhost:8080",
