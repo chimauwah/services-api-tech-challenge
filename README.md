@@ -39,7 +39,7 @@ The API specification can be found at : http://localhost:8080/api/docs
 ├── handler          
 │   └── handlers.go  // API core handler / service layer
 ├── helper
-│   └── helpers.go   // 
+│   └── helpers.go   // provides additional functionality 
 ├── middleware
 │   └── redoc.go     // serves doc site for swagger spec
 ├── model
