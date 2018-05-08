@@ -6,7 +6,16 @@ A basic modern RESTful API web service providing CRUD operations and search func
 
 ### Prerequisites
 
-You need [Go](https://golang.org/dl/) to install this project
+You need [Go](https://golang.org/dl/) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to install this project
+
+Also, this project uses [go-sqlite3](https://github.com/mattn/go-sqlite3) which is a cgo package and requires gcc to install. 
+
+If after following the install steps you get this error:
+```
+# github.com/mattn/go-sqlite3
+exec: "gcc": executable file not found in %PATH%
+```
+Follow the steps found [here](https://github.com/mattn/go-sqlite3/issues/212) to resolve the issue.
 
 
 ### Installing
@@ -24,6 +33,7 @@ $ cd services-api-tech-challenge
 $ go build
 $ ./services-api-tech-challenge
 ```
+
 
 ## API
 
