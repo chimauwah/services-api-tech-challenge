@@ -1,12 +1,13 @@
 // Services & Api Tech Challange #1
 //
-// This Rest API written in GoLang provides CRUD operations
-// for a directory of company employees
+// This basic modern RESTful API written in GoLang, provides CRUD operations
+// and search functionality for a directory of hard-coded company employees
+// stored in an in-memory database
 //
 //     Schemes: http
 //     Host: localhost:8080
 //     BasePath: /
-//     Version: 0.0.1
+//     Version: 0.1.0
 //	   Contact: Chima Uwah<cuwah@captechconsulting.com> https://github.com/chimauwah/services-api-tech-challenge
 //
 //     Consumes:
